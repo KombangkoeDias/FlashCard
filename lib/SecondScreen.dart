@@ -14,7 +14,7 @@ class _SecondScreenState extends State<SecondScreen> {
             'Practice',
           ),
         ),
-        body: Text('second screen')
+        body: Text('Practice')
     );
   }
 }

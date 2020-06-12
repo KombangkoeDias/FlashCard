@@ -14,7 +14,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
             'Achievement',
           ),
         ),
-        body: Text('second screen')
+        body: Text('Achievement')
     );
   }
 }

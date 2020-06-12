@@ -14,7 +14,7 @@ class _FourthScreenState extends State<FourthScreen> {
             'Setting',
           ),
         ),
-        body: Text('second screen')
+        body: Text('Setting')
     );
   }
 }

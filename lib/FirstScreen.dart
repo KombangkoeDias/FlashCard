@@ -14,7 +14,7 @@ class _FirstScreenState extends State<FirstScreen> {
               'Add New Flash Cards',
             ),
         ),
-      body: Text('first screen')
+      body: Text('Add New Flash Cards')
     );
   }
 }

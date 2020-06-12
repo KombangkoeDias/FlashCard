@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flashcard/FirstScreen.dart';
-import 'package:flashcard/SecondScreen.dart';
-import 'package:flashcard/ThirdScreen.dart';
-import 'package:flashcard/FourthScreen.dart';
+import 'package:flashcard/FirstScreen.dart'; //FirstScreen
+import 'package:flashcard/SecondScreen.dart'; //SecondScreen
+import 'package:flashcard/ThirdScreen.dart'; //ThirdScreen
+import 'package:flashcard/FourthScreen.dart'; //FourthScreen
 
 
 void main() {
@@ -37,9 +37,48 @@ class HomeScene extends StatelessWidget {
             ),
           ),
         ),
-        body: myCard(
-
-        )
+        body: myCard(),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+                child: Text('Drawer Header'),
+                  decoration: BoxDecoration(
+                  color: Colors.blue,
+                  ),
+            ),
+            ListTile(
+                title: Text('My Flash Cards'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/first');
+                  },
+            ),
+            ListTile(
+                title: Text('Edit Flash Cards'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/second');
+                  },
+            ),
+            ListTile(
+                title: Text('Achievements'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/third');
+                  },
+            ),
+            ListTile(
+                title: Text('Edit'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/fourth');
+                  }
+            )
+          ]
+        ),
+      ),
     );
   }
 }
@@ -64,7 +103,7 @@ class myCard extends StatelessWidget {
                                   width: 205.0,
                                   height: 300.0,
                                     child: Center(
-                                      child: Text("This is a card"),
+                                      child: Text("My Flash Card Sets"),
                                     ),
                                 ),
                               ),
@@ -81,7 +120,7 @@ class myCard extends StatelessWidget {
                                 width: 205.0,
                                 height: 300.0,
                                 child: Center(
-                                    child: Text("This is another card")
+                                    child: Text("Practice")
                                 ),
                               ),
                             ),
@@ -107,7 +146,7 @@ class myCard extends StatelessWidget {
                                 width: 205.0,
                                 height: 300.0,
                                 child: Center(
-                                  child: Text("This is a card"),
+                                  child: Text("Achievements"),
                                 ),
                               ),
                             ),
@@ -124,7 +163,7 @@ class myCard extends StatelessWidget {
                             width: 205.0,
                             height: 300.0,
                             child: Center(
-                                child: Text("This is another card")
+                                child: Text("Setting")
                             ),
                           ),
                         ),
