@@ -13,9 +13,17 @@ class _LogInState extends State<LogIn> {
           child: Column(
             children: <Widget>[
               SizedBox(
-                width: 200.0,
-                height: 240.0,
-                child: SizedBox(width: 0,height: 0) //logo
+                width: 100,
+                height: 100,
+              ),
+              SizedBox(
+                width: 100.0,
+                height: 100.0,
+                child: Image(image: AssetImage('lib/Assets/logo.png')) //logo
+              ),
+              SizedBox(
+                width: 100,
+                height: 40,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -56,9 +64,6 @@ class _LogInState extends State<LogIn> {
               SizedBox(
                 width: 300,
                 height: 40,
-                child: Text(
-                  'forget username?'
-                )
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -83,8 +88,13 @@ class _LogInState extends State<LogIn> {
               SizedBox(
                   width: 300,
                   height: 50,
-                  child: Text(
-                      'forget password?'
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                          'forget username or password?'
+                      ),
+                    ],
                   )
               ),
               FlatButton(
