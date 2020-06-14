@@ -3,6 +3,7 @@ import 'package:flashcard/FirstScreen.dart'; //FirstScreen
 import 'package:flashcard/SecondScreen.dart'; //SecondScreen
 import 'package:flashcard/ThirdScreen.dart'; //ThirdScreen
 import 'package:flashcard/FourthScreen.dart'; //FourthScreen
+import 'package:flashcard/login.dart'; //loginScreen
 
 
 void main() {
@@ -16,7 +17,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => HomeScene(),
+        '/': (context) => LogIn(),
+        '/home': (context) => HomeScene(),
         '/first': (context) => FirstScreen(),
         '/second': (context) => SecondScreen(),
         '/third': (context) => ThirdScreen(),
