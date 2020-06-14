@@ -4,6 +4,7 @@ import 'package:flashcard/SecondScreen.dart'; //SecondScreen
 import 'package:flashcard/ThirdScreen.dart'; //ThirdScreen
 import 'package:flashcard/FourthScreen.dart'; //FourthScreen
 import 'package:flashcard/login.dart'; //loginScreen
+import 'package:flashcard/signup.dart'; //signupScreen
 
 
 void main() {
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
         '/first': (context) => FirstScreen(),
         '/second': (context) => SecondScreen(),
         '/third': (context) => ThirdScreen(),
-        '/fourth': (context) => FourthScreen()
+        '/fourth': (context) => FourthScreen(),
+        '/signup': (context) => SignUp(),
       }
     );
   }

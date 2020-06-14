@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
-
-class LogIn extends StatefulWidget {
+import 'package:http/http.dart' as http;
+class SignUp extends StatefulWidget {
   @override
-  _LogInState createState() => _LogInState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _LogInState extends State<LogIn> {
+class _SignUpState extends State<SignUp> {
 
   final UsernameController = TextEditingController();
   final PasswordController = TextEditingController();
 
-  @override
-  void dispose(){
-    UsernameController.dispose();
-    PasswordController.dispose();
-    super.dispose();
+  Future<List> sendData() async {
+    bool value = true;
+    try {
+      final response = await http.post(
+          "http://10.0.2.2/flash_card/insertdata.php",
+          body: {
+            "username": UsernameController.text,
+            "password": PasswordController.text
+          }
+      );
+    }
+    catch(e){
+      print(e);
+      value = false;
+    }
+    if (value){
+      Navigator.pop(context);
+    }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,9 +41,9 @@ class _LogInState extends State<LogIn> {
                   height: 100,
                 ),
                 SizedBox(
-                  width: 100.0,
-                  height: 100.0,
-                  child: Image(image: AssetImage('lib/Assets/logo.png')) //logo
+                    width: 100.0,
+                    height: 100.0,
+                    child: Image(image: AssetImage('lib/Assets/logo.png')) //logo
                 ),
                 SizedBox(
                   width: 100,
@@ -41,17 +53,17 @@ class _LogInState extends State<LogIn> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "Log In",
-                      style: TextStyle(
-                        color: Colors.lightBlue,
-                        fontSize: 40
-                      )
+                        "Sign Up",
+                        style: TextStyle(
+                            color: Colors.lightBlue,
+                            fontSize: 40
+                        )
                     ),
                   ],
                 ),
                 SizedBox(
-                  height: 50,
-                  width: 100
+                    height: 50,
+                    width: 100
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -62,13 +74,13 @@ class _LogInState extends State<LogIn> {
                       child: TextField(
                         controller: UsernameController,
                         decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.lightBlue)
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey)
-                          ),
-                          hintText: 'Username'
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.lightBlue)
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey)
+                            ),
+                            hintText: 'Username'
                         ),
                       ),
                     )
@@ -122,37 +134,15 @@ class _LogInState extends State<LogIn> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Go',
-                          style: TextStyle(
-                            fontSize: 20
-                          )
+                            'Sign Up!',
+                            style: TextStyle(
+                                fontSize: 20
+                            )
                         ),
                       ],
                     ),
                   ),
-                  onPressed: () {print(UsernameController.text); print(PasswordController.text);},
-                ),
-                SizedBox(
-                  height: 30,
-                  width: 100,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-
-                      Text("Don't have account yet? Sign Up "),
-                      GestureDetector(
-                        onTap: () {Navigator.pushNamed(context, '/signup');},
-                        child: Text(
-                          "Here",
-                          style: TextStyle(
-                            color: Colors.lightBlue
-                          )
-                        )
-                      )
-
-
-                    ],
+                  onPressed: () {sendData();},
                 )
               ],
             ),
