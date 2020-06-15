@@ -33,6 +33,8 @@ class MyApp extends StatelessWidget {
 class HomeScene extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //print(username);
+
     return Scaffold(
         appBar: AppBar(
           title: Center(
@@ -88,10 +90,13 @@ class HomeScene extends StatelessWidget {
 }
 
 class myCard extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+    final String username = ModalRoute.of(context).settings.arguments;
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Column(
             children: <Widget>[
@@ -178,8 +183,34 @@ class myCard extends StatelessWidget {
                 ],
               ),
             ],
-          )
-        ],
+          ),
+
+            Container(
+              color: Colors.lightBlue,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: 300,
+                    height: 100,
+
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Welcome "+username+" let's start!",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20
+                          )
+                        ),
+                      ],
+                    )
+                  ),
+                ],
+              ),
+            ),
+            ],
       ),
     );
   }

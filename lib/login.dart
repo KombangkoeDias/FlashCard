@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class LogIn extends StatefulWidget {
   @override
@@ -6,9 +7,41 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
-
+  bool value = true;
   final UsernameController = TextEditingController();
   final PasswordController = TextEditingController();
+  Future<List> userLogIn() async {
+
+    try {
+      final response = await http.post(
+          "http://10.0.2.2/flash_card/login.php",
+          body: {
+            "username": UsernameController.text,
+            "password": PasswordController.text
+          }
+      );
+      print(response.statusCode);
+      if (response.statusCode == 404){
+        setState(() {
+          value = false;
+        });
+      }
+      if (response.statusCode == 200){
+        setState(() {
+          value = true;
+        });
+      }
+    }
+    catch(e){
+      print(e);
+      setState(() {
+        value = false;
+      });
+    }
+    if (value){
+      Navigator.popAndPushNamed(context, '/home',arguments: UsernameController.text);
+    }
+  }
 
   @override
   void dispose(){
@@ -51,7 +84,41 @@ class _LogInState extends State<LogIn> {
                 ),
                 SizedBox(
                   height: 50,
-                  width: 100
+                  width: 400,
+                    child: Visibility(
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: !value,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Incorrect Username or Password",
+                            style: TextStyle(
+                              color: Colors.redAccent
+                            )
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Don't have an account? Sign Up "
+                              ),
+                              GestureDetector(
+                                onTap: () {Navigator.pushNamed(context, '/signup');},
+                                child: Text(
+                                  "Here",
+                                  style: TextStyle(
+                                    color: Colors.lightBlue
+                                  )
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    )
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -77,6 +144,7 @@ class _LogInState extends State<LogIn> {
                 SizedBox(
                   width: 300,
                   height: 40,
+
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -130,7 +198,7 @@ class _LogInState extends State<LogIn> {
                       ],
                     ),
                   ),
-                  onPressed: () {print(UsernameController.text); print(PasswordController.text);},
+                  onPressed: () {userLogIn();},
                 ),
                 SizedBox(
                   height: 30,
@@ -150,8 +218,6 @@ class _LogInState extends State<LogIn> {
                           )
                         )
                       )
-
-
                     ],
                 )
               ],
