@@ -90,7 +90,6 @@ class HomeScene extends StatelessWidget {
 }
 
 class myCard extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final String username = ModalRoute.of(context).settings.arguments;
@@ -99,6 +98,7 @@ class myCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Column(
+
             children: <Widget>[
               Row(
                 children: <Widget>[
@@ -107,13 +107,21 @@ class myCard extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                             GestureDetector(
-                              child: Card(
-                                child: SizedBox(
-                                  width: 205.0,
-                                  height: 300.0,
-                                    child: Center(
-                                      child: Text("My Flash Card Sets"),
-                                    ),
+                              child: Container(
+                                color: Colors.lightBlue,
+                                child: Card(
+                                  child: SizedBox(
+                                    width: 205.0,
+                                    height: 300.0,
+                                      child: Center(
+                                        child: Text(
+                                            "My Flash Card Sets",
+                                            style: TextStyle(
+                                                fontSize: 20
+                                            )
+                                        ),
+                                      ),
+                                  ),
                                 ),
                               ),
                               onTap: () => Navigator.pushNamed(context, '/first'),
@@ -124,12 +132,19 @@ class myCard extends StatelessWidget {
                   Column(
                       children: <Widget>[
                           GestureDetector(
-                            child: Card(
-                              child: SizedBox(
-                                width: 205.0,
-                                height: 300.0,
-                                child: Center(
-                                    child: Text("Practice")
+                            child: Container(
+                              color: Colors.blueAccent,
+                              child: Card(
+                                child: SizedBox(
+                                  width: 205.0,
+                                  height: 300.0,
+                                  child: Center(
+                                      child: Text(
+                                          "Practice",
+                                          style: TextStyle(
+                                              fontSize: 20
+                                          ))
+                                  ),
                                 ),
                               ),
                             ),
@@ -150,12 +165,20 @@ class myCard extends StatelessWidget {
                     child: Column(
                         children: <Widget>[
                           GestureDetector(
-                            child: Card(
-                              child: SizedBox(
-                                width: 205.0,
-                                height: 300.0,
-                                child: Center(
-                                  child: Text("Achievements"),
+                            child: Container(
+                              color: Colors.blueAccent,
+                              child: Card(
+                                child: SizedBox(
+                                  width: 205.0,
+                                  height: 300.0,
+                                  child: Center(
+                                    child: Text(
+                                        "Achievements",
+                                        style: TextStyle(
+                                          fontSize: 20
+                                        )
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -167,12 +190,20 @@ class myCard extends StatelessWidget {
                   Column(
                     children: <Widget>[
                       GestureDetector(
-                        child: Card(
-                          child: SizedBox(
-                            width: 205.0,
-                            height: 300.0,
-                            child: Center(
-                                child: Text("Setting")
+                        child: Container(
+                          color: Colors.lightBlue,
+                          child: Card(
+                            child: SizedBox(
+                              width: 205.0,
+                              height: 300.0,
+                              child: Center(
+                                  child: Text(
+                                      "Setting",
+                                      style: TextStyle(
+                                          fontSize: 20
+                                      )
+                                  )
+                              ),
                             ),
                           ),
                         ),
