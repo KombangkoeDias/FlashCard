@@ -56,6 +56,7 @@ class _LogInState extends State<LogIn> {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
+
               children: <Widget>[
                 SizedBox(
                   width: 100,
