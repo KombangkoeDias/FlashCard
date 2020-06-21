@@ -14,12 +14,23 @@ class _SignUpState extends State<SignUp> {
     bool value = true;
     try {
       final response = await http.post(
-          "http://10.0.2.2/flash_card/insertdata.php",
+          "http://10.0.2.2/flash_card/signup.php",
           body: {
             "username": UsernameController.text,
             "password": PasswordController.text
           }
       );
+      print(response.statusCode);
+      if (response.statusCode == 404){
+        setState(() {
+          value = false;
+        });
+      }
+      if (response.statusCode == 200) {
+        setState(() {
+          value = true;
+        });
+      }
     }
     catch(e){
       print(e);
@@ -27,6 +38,9 @@ class _SignUpState extends State<SignUp> {
     }
     if (value){
       Navigator.pop(context);
+    }
+    else{
+      print("error");
     }
   }
   @override

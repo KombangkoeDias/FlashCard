@@ -33,12 +33,12 @@ class _LogInState extends State<LogIn> {
       }
     }
     catch(e){
-      print(e);
       setState(() {
         value = false;
       });
     }
     if (value){
+
       Navigator.popAndPushNamed(context, '/home',arguments: UsernameController.text);
     }
   }
