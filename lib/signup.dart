@@ -40,7 +40,7 @@ class _SignUpState extends State<SignUp> {
       Navigator.pop(context);
     }
     else{
-      print("error");
+
     }
   }
   @override
