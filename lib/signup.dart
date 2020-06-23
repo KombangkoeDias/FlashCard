@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 class SignUp extends StatefulWidget {
@@ -6,12 +7,12 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-
+  bool value = true;
   final UsernameController = TextEditingController();
   final PasswordController = TextEditingController();
 
   Future<List> sendData() async {
-    bool value = true;
+
     try {
       final response = await http.post(
           "http://10.0.2.2/flash_card/signup.php",
@@ -73,11 +74,30 @@ class _SignUpState extends State<SignUp> {
                             fontSize: 40
                         )
                     ),
+
                   ],
                 ),
                 SizedBox(
                     height: 50,
-                    width: 100
+                    width: 300,
+                    child:Visibility(
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        visible: !value,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+
+                            Text(
+                                "This username is already used, please choose other username",
+                              style: TextStyle(
+                                color: Colors.red
+                              )
+                            ),
+                          ],
+                        )
+                    )
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -138,25 +158,53 @@ class _SignUpState extends State<SignUp> {
                       ],
                     )
                 ),
-                FlatButton(
-                  color: Colors.lightBlue,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    FlatButton(
+                      color: Colors.lightBlue,
 
-                  child: SizedBox(
-                    width: 100,
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                            'Sign Up!',
-                            style: TextStyle(
-                                fontSize: 20
-                            )
+                      child: SizedBox(
+                        width: 100,
+                        height: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                                'Cancel',
+                                style: TextStyle(
+                                    fontSize: 20
+                                )
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                      onPressed: () {Navigator.pop(context);},
                     ),
-                  ),
-                  onPressed: () {sendData();},
+                    SizedBox(
+                      width: 35,
+                    ),
+                    FlatButton(
+                      color: Colors.lightBlue,
+
+                      child: SizedBox(
+                        width: 100,
+                        height: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                                'Sign Up!',
+                                style: TextStyle(
+                                    fontSize: 20
+                                )
+                            ),
+                          ],
+                        ),
+                      ),
+                      onPressed: () {sendData();},
+                    ),
+                  ],
                 )
               ],
             ),

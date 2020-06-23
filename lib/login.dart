@@ -38,7 +38,6 @@ class _LogInState extends State<LogIn> {
       });
     }
     if (value){
-
       Navigator.popAndPushNamed(context, '/home',arguments: UsernameController.text);
     }
   }
@@ -191,7 +190,7 @@ class _LogInState extends State<LogIn> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Go',
+                          'Log In',
                           style: TextStyle(
                             fontSize: 20
                           )
