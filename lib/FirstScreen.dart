@@ -62,10 +62,11 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   Future<List> addSet() async {
-    FlashCardSets set = FlashCardSets("new",[]);
+
     final response = await http.post(
         "http://10.0.2.2/flash_card/addSet.php",
         body: {
+          "setName": nameController.text,
           "new": true
         }
     );
@@ -74,8 +75,22 @@ class _FirstScreenState extends State<FirstScreen> {
     }
   }
 
-  Future<List> loadFlashCard() async {
+  Future<List> loadFlashCardName() async {
+    final response = await http.post(
+        "http://10.0.2.2/flash_card/addSet.php",
+        body: {
+          "setName": nameController.text,
+          "new": true
+        }
+    );
+    if (response.statusCode == 200){
+      setState(() {
 
+      });
+    }
+    else{
+
+    }
   }
   @override
   Widget build(BuildContext context) {
