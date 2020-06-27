@@ -12,7 +12,7 @@ class _FirstScreenState extends State<FirstScreen> {
 
   final nameController = TextEditingController();
   List<FlashCardSets> Sets = [];
-
+  String username;
   Future<void> OpenCupertino(){
     return showDialog<void>(
       context: context,
@@ -67,12 +67,12 @@ class _FirstScreenState extends State<FirstScreen> {
         "http://10.0.2.2/flash_card/addSet.php",
         body: {
           "setName": nameController.text,
-          "new": true
+          "new": "thing"
         }
     );
-    if (response.statusCode != 404) {
+    print(response.statusCode);
 
-    }
+    nameController.clear();
   }
 
   Future<List> loadFlashCardName() async {
@@ -94,6 +94,11 @@ class _FirstScreenState extends State<FirstScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    setState(() {username = ModalRoute
+        .of(context)
+        .settings
+        .arguments;});
+    print(username);
     return Scaffold(
         appBar: AppBar(
           title: Text(
