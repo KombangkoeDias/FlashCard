@@ -22,7 +22,7 @@ class myCard extends StatelessWidget {
                   children: <Widget>[
                      Expanded(
                        child: GestureDetector(
-                          onTap: () {Navigator.pushNamed(context, '/first');},
+                          onTap: () {Navigator.pushNamed(context, '/first',arguments: username);},
                           child: Card(
                               child:Center(
                                   child:Text(
@@ -34,7 +34,7 @@ class myCard extends StatelessWidget {
                      ),
                     Expanded(
                       child: GestureDetector(
-                        onTap: () {Navigator.pushNamed(context, '/second');},
+                        onTap: () {Navigator.pushNamed(context, '/second',arguments: username);},
                         child: Card(
                             child: Center(
                                 child:Text(
@@ -53,7 +53,7 @@ class myCard extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       child: GestureDetector(
-                        onTap: () {Navigator.pushNamed(context, '/third');},
+                        onTap: () {Navigator.pushNamed(context, '/third',arguments: username);},
                         child: Card(
                             child:Center(
                                 child:Text(
@@ -65,7 +65,7 @@ class myCard extends StatelessWidget {
                     ),
                     Expanded(
                       child: GestureDetector(
-                        onTap: () {Navigator.pushNamed(context, '/fourth');},
+                        onTap: () {Navigator.pushNamed(context, '/fourth',arguments: username);},
                         child: Card(
                             child: Center(
                                 child:Text(

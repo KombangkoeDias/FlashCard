@@ -11,9 +11,12 @@ class FirstScreen extends StatefulWidget {
 class _FirstScreenState extends State<FirstScreen> {
 
   final nameController = TextEditingController();
-  List<FlashCardSets> Sets = [];
+
+  List<String> setNames = [];
   String username;
+
   Future<void> OpenCupertino(){
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -53,6 +56,7 @@ class _FirstScreenState extends State<FirstScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
                 addSet();
+
               },
             ),
           ],
@@ -62,43 +66,55 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   Future<List> addSet() async {
-
+    print(username);
     final response = await http.post(
         "http://10.0.2.2/flash_card/addSet.php",
         body: {
           "setName": nameController.text,
-          "new": "thing"
+          "username": username
         }
     );
-    print(response.statusCode);
-
+    print(response.body);
     nameController.clear();
+    loadFlashCardName();
   }
 
   Future<List> loadFlashCardName() async {
     final response = await http.post(
-        "http://10.0.2.2/flash_card/addSet.php",
+        "http://10.0.2.2/flash_card/loadSetNames.php",
         body: {
-          "setName": nameController.text,
-          "new": true
+          "username":username
         }
     );
+
     if (response.statusCode == 200){
       setState(() {
-
+        setNames.clear();
+        List<String> newresponse = response.body.substring(1,response.body.length-1).split(",");
+        setNames = newresponse;
       });
     }
     else{
 
     }
   }
+
+  bool value = true;
   @override
   Widget build(BuildContext context) {
-    setState(() {username = ModalRoute
-        .of(context)
-        .settings
-        .arguments;});
-    print(username);
+    setState(() {
+      username = ModalRoute
+          .of(context)
+          .settings
+          .arguments;
+    });
+    if (value){
+      loadFlashCardName();
+      setState(() {
+        value = false;
+      });
+    }
+    print(setNames);
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -108,7 +124,7 @@ class _FirstScreenState extends State<FirstScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          if(Sets.length == 0)
+          if(setNames.length == 0)
             Center(
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
@@ -117,7 +133,7 @@ class _FirstScreenState extends State<FirstScreen> {
                   ),
                 )
             ),
-          if(Sets.length != 0)
+          if(setNames.length != 0)
             Center(
                 child: Text(
                     'have sets'
@@ -127,10 +143,7 @@ class _FirstScreenState extends State<FirstScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (Sets.length == 0)
             this.setState(() {OpenCupertino();});
-          else
-            this.setState(() {Sets.clear();});
           },
           backgroundColor: Colors.lightBlue ,
         child: Icon(Icons.add_circle_outline)

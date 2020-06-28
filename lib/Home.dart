@@ -10,6 +10,7 @@ class HomeScene extends StatelessWidget {
         .of(context)
         .settings
         .arguments;
+    String myuser = username;
     print(username + "Home");
     return Scaffold(
       appBar: AppBar(
@@ -33,25 +34,25 @@ class HomeScene extends StatelessWidget {
               ListTile(
                 title: Text('My Flash Cards'),
                 onTap: () {
-                  Navigator.popAndPushNamed(context, '/first', arguments: username);
+                  Navigator.popAndPushNamed(context, '/first', arguments: myuser);
                 },
               ),
               ListTile(
                 title: Text('Edit Flash Cards'),
                 onTap: () {
-                  Navigator.popAndPushNamed(context, '/second', arguments: username);
+                  Navigator.popAndPushNamed(context, '/second', arguments: myuser);
                 },
               ),
               ListTile(
                 title: Text('Achievements'),
                 onTap: () {
-                  Navigator.popAndPushNamed(context, '/third', arguments: username);
+                  Navigator.popAndPushNamed(context, '/third', arguments: myuser);
                 },
               ),
               ListTile(
                   title: Text('Edit'),
                   onTap: () {
-                    Navigator.popAndPushNamed(context, '/fourth', arguments: username);
+                    Navigator.popAndPushNamed(context, '/fourth', arguments: myuser);
                   }
               )
             ]
