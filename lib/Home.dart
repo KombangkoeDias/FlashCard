@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcard/myCard.dart';
 
@@ -26,7 +27,22 @@ class HomeScene extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                child: Text('Drawer Header'),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBox(
+                        width: 80,
+                        height: 80,
+                        child: Image(image: AssetImage('lib/Assets/logo.png'))
+                    ),
+                    Text(
+                      "Flash",
+                      style: TextStyle(
+                        fontSize: 30
+                      )
+                    )
+                  ],
+                ), //logo,
                 decoration: BoxDecoration(
                   color: Colors.blue,
                 ),

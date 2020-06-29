@@ -11,12 +11,25 @@ class FirstScreen extends StatefulWidget {
 class _FirstScreenState extends State<FirstScreen> {
 
   final nameController = TextEditingController();
-
+  List<Widget> nameList = [];
   List<String> setNames = [];
   String username;
 
-  Future<void> OpenCupertino(){
+  List<Widget> addNameList(){
+    List<Widget> list = new List<Widget>();
+    for (int i = 0;i < setNames.length; ++i){
+      list.add(new GestureDetector(
+        child: ListTile(
+          leading: Icon(Icons.content_copy),
+          title: Text(setNames[i])
+        ),
+        onTap: () {print(setNames[i]);},
+      ));
+    }
+    return list;
+  }
 
+  Future<void> OpenCupertino(){
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -88,11 +101,16 @@ class _FirstScreenState extends State<FirstScreen> {
     );
 
     if (response.statusCode == 200){
+      List<String> newresponse = response.body.substring(1,response.body.length-1).split(",");
       setState(() {
         setNames.clear();
-        List<String> newresponse = response.body.substring(1,response.body.length-1).split(",");
         setNames = newresponse;
+        for (int i = 0; i < setNames.length; ++i){
+          setNames[i] = setNames[i].substring(1,setNames[i].length-1);
+        }
       });
+
+
     }
     else{
 
@@ -118,11 +136,11 @@ class _FirstScreenState extends State<FirstScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-              'Add New Flash Cards',
+              'Your Flash Card Sets',
             ),
         ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: setNames== 0? MainAxisAlignment.center : MainAxisAlignment.start,
         children: <Widget>[
           if(setNames.length == 0)
             Center(
@@ -134,19 +152,25 @@ class _FirstScreenState extends State<FirstScreen> {
                 )
             ),
           if(setNames.length != 0)
-            Center(
-                child: Text(
-                    'have sets'
+            Container(
+            child: SingleChildScrollView(
+                child: SizedBox(
+                  height: 500,
+                  child: ListView(
+                    children: ListTile.divideTiles(context: context,tiles: addNameList()).toList()
+
+                  ),
                 )
-            ),
+              ),
+            )
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-            this.setState(() {OpenCupertino();});
+            this.setState(() {OpenCupertino();}); //use setState so that the view is reset
           },
           backgroundColor: Colors.lightBlue ,
-        child: Icon(Icons.add_circle_outline)
+        child: Icon(Icons.add)
       ),
     );
   }
