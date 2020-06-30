@@ -99,9 +99,13 @@ class _FirstScreenState extends State<FirstScreen> {
           "username":username
         }
     );
-
+    print(response.statusCode);
     if (response.statusCode == 200){
-      List<String> newresponse = response.body.substring(1,response.body.length-1).split(",");
+      List<String> newresponse = [];
+      if (response.body.length != 0) {
+        newresponse = response.body.substring(
+            1, response.body.length - 1).split(",");
+      }
       setState(() {
         setNames.clear();
         setNames = newresponse;
@@ -109,12 +113,12 @@ class _FirstScreenState extends State<FirstScreen> {
           setNames[i] = setNames[i].substring(1,setNames[i].length-1);
         }
       });
-
-
+      print(setNames);
     }
     else{
-
+      print("error");
     }
+
   }
 
   bool value = true;
@@ -132,7 +136,7 @@ class _FirstScreenState extends State<FirstScreen> {
         value = false;
       });
     }
-    print(setNames);
+
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -141,8 +145,9 @@ class _FirstScreenState extends State<FirstScreen> {
         ),
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: setNames== 0? MainAxisAlignment.center : MainAxisAlignment.start,
+          mainAxisAlignment:  (setNames.length == 0) ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: <Widget>[
+
             if(setNames.length == 0)
               Center(
                   child: Padding(
