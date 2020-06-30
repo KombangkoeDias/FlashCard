@@ -12,7 +12,6 @@ class HomeScene extends StatelessWidget {
         .settings
         .arguments;
     String myuser = username;
-    print(username + "Home");
     return Scaffold(
       appBar: AppBar(
         title: Center(

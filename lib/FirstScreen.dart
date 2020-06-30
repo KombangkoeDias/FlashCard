@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcard/flash_card/Sets.dart';
 import 'package:http/http.dart' as http;
+import 'package:flashcard/helper_classes/usernameSetname.dart';
 
 class FirstScreen extends StatefulWidget {
   @override
@@ -23,7 +24,7 @@ class _FirstScreenState extends State<FirstScreen> {
           leading: Icon(Icons.content_copy),
           title: Text(setNames[i])
         ),
-        onTap: () {print(setNames[i]);},
+        onTap: () {Navigator.pushNamed(context, '/set',arguments: usernameSetname(username,setNames[i]));},
       ));
     }
     return list;
