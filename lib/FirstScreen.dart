@@ -139,38 +139,38 @@ class _FirstScreenState extends State<FirstScreen> {
               'Your Flash Card Sets',
             ),
         ),
-      body: Column(
-        mainAxisAlignment: setNames== 0? MainAxisAlignment.center : MainAxisAlignment.start,
-        children: <Widget>[
-          if(setNames.length == 0)
-            Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                      ' No FlashCard Sets yet, you can add new flash card by tapping the right bottom button'
-                  ),
-                )
-            ),
-          if(setNames.length != 0)
-            Container(
-            child: SingleChildScrollView(
-                child: SizedBox(
-                  height: 500,
-                  child: ListView(
-                    children: ListTile.divideTiles(context: context,tiles: addNameList()).toList()
-
-                  ),
-                )
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: setNames== 0? MainAxisAlignment.center : MainAxisAlignment.start,
+          children: <Widget>[
+            if(setNames.length == 0)
+              Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                        ' No FlashCard Sets yet, you can add new flash card by tapping the right bottom button'
+                    ),
+                  )
               ),
-            )
+            if(setNames.length != 0)
+              Container(
+                  child: SizedBox(
+                    height: 500,
+                    child: ListView(
+                      children: ListTile.divideTiles(context: context,tiles: addNameList()).toList()
+
+                    ),
+                  )
+                ),
         ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
             this.setState(() {OpenCupertino();}); //use setState so that the view is reset
           },
           backgroundColor: Colors.lightBlue ,
-        child: Icon(Icons.add)
+                      child: Icon(Icons.add)
       ),
     );
   }
