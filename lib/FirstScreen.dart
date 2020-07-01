@@ -25,7 +25,7 @@ class _FirstScreenState extends State<FirstScreen> {
     for (int i = 0;i < setNames.length; ++i){
       list.add(new GestureDetector(
         child: Padding(
-          padding: const EdgeInsets.all(2.0),
+          padding: const EdgeInsets.fromLTRB(5,2,5,2),
           child: Ink(
             color: Colors.lightBlue[100],
             child: ListTile(
