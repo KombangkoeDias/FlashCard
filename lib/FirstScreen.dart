@@ -16,13 +16,38 @@ class _FirstScreenState extends State<FirstScreen> {
   List<String> setNames = [];
   String username;
 
+  Future<List> deleteSet(String setName){
+
+  }
+
   List<Widget> addNameList(){
     List<Widget> list = new List<Widget>();
     for (int i = 0;i < setNames.length; ++i){
       list.add(new GestureDetector(
-        child: ListTile(
-          leading: Icon(Icons.content_copy),
-          title: Text(setNames[i])
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Ink(
+            color: Colors.lightBlue[100],
+            child: ListTile(
+              leading: Icon(Icons.content_copy),
+              title: Text(
+                  setNames[i],
+                style: TextStyle(color: Colors.indigo)
+              ),
+              trailing: OutlineButton(
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30)),
+                color: Colors.lightBlue[300],
+                borderSide: BorderSide(color: Colors.blue),
+                child: Text(
+                  "Delete",
+                  style: TextStyle(
+                    color: Colors.red
+                  ),
+                ),
+                onPressed: () {deleteSet(setNames[i]);},
+              )
+            ),
+          ),
         ),
         onTap: () {Navigator.pushNamed(context, '/set',arguments: usernameSetname(username,setNames[i]));},
       ));
@@ -163,7 +188,10 @@ class _FirstScreenState extends State<FirstScreen> {
                   child: SizedBox(
                     height: 500,
                     child: ListView(
-                      children: ListTile.divideTiles(context: context,tiles: addNameList()).toList()
+                      children: ListTile.divideTiles(
+                          context: context,
+                          tiles: addNameList()
+                      ).toList()
 
                     ),
                   )
