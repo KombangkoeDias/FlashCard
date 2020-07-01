@@ -169,35 +169,45 @@ class _FirstScreenState extends State<FirstScreen> {
               'Your Flash Card Sets',
             ),
         ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment:  (setNames.length == 0) ? MainAxisAlignment.center : MainAxisAlignment.start,
-          children: <Widget>[
-
-            if(setNames.length == 0)
-              Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                        ' No FlashCard Sets yet, you can add new flash card by tapping the right bottom button'
-                    ),
-                  )
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraint){
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraint.maxHeight,
               ),
-            if(setNames.length != 0)
-              Container(
-                  child: SizedBox(
-                    height: 500,
-                    child: ListView(
-                      children: ListTile.divideTiles(
-                          context: context,
-                          tiles: addNameList()
-                      ).toList()
+              child: Column(
+                mainAxisAlignment:  (setNames.length == 0) ? MainAxisAlignment.center : MainAxisAlignment.start,
+                children: <Widget>[
 
+                  if(setNames.length == 0)
+                    Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Container(
+                              height: constraint.maxHeight,
+                              child: Text(
+                                  ' No FlashCard Sets yet, you can add new flash card by tapping the right bottom button'
+                              )
+                          ),
+                        )
                     ),
-                  )
-                ),
-        ],
-        ),
+                  if(setNames.length != 0)
+                    Container(
+                        height: constraint.maxHeight,
+                        child: ListView(
+                            children: ListTile.divideTiles(
+                                context: context,
+                                tiles: addNameList()
+                            ).toList()
+                        ),
+                    )
+                ],
+              ),
+            ),
+          );
+        },
+
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
