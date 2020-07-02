@@ -16,8 +16,52 @@ class _FirstScreenState extends State<FirstScreen> {
   List<String> setNames = [];
   String username;
 
-  Future<List> deleteSet(String setName){
+  Future<List> deleteSet(String setName) async {
+    print(setName + " " + username);
+    final response = await http.post(
+        "http://10.0.2.2/flash_card/deleteSet.php",
+        body: {
+          "setName": setName,
+          "username": username
+        }
+    );
+    loadFlashCardName();
+  }
 
+  Future<void> ConfirmDelete(String setName){
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text('Delete Set'),
+          content: Column(
+            children: <Widget>[
+              Text('Are you sure you want to delete this \n set: ' + setName),
+              Card(
+                color: Colors.transparent,
+                elevation: 0.0,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text('Delete'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                deleteSet(setName);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   List<Widget> addNameList(){
@@ -44,7 +88,7 @@ class _FirstScreenState extends State<FirstScreen> {
                     color: Colors.red
                   ),
                 ),
-                onPressed: () {deleteSet(setNames[i]);},
+                onPressed: () {ConfirmDelete(setNames[i]);},
               )
             ),
           ),
@@ -95,7 +139,6 @@ class _FirstScreenState extends State<FirstScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
                 addSet();
-
               },
             ),
           ],
@@ -105,7 +148,6 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   Future<List> addSet() async {
-    print(username);
     final response = await http.post(
         "http://10.0.2.2/flash_card/addSet.php",
         body: {

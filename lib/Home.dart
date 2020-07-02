@@ -69,7 +69,13 @@ class HomeScene extends StatelessWidget {
                   onTap: () {
                     Navigator.popAndPushNamed(context, '/fourth', arguments: myuser);
                   }
-              )
+              ),
+              ListTile(
+                  title: Text('logout'),
+                  onTap: () {
+                    Navigator.popAndPushNamed(context, '/');
+                  }
+              ),
             ]
         ),
       ),

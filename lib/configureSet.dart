@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flashcard/flash_card/Sets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flashcard/helper_classes/usernameSetname.dart';
+import 'package:flutter/cupertino.dart';
+
 
 class ConfigureSetScreen extends StatefulWidget {
   @override
@@ -12,15 +14,99 @@ class ConfigureSetScreen extends StatefulWidget {
 class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
   usernameSetname usernamesetname = usernameSetname("","");
   FlashCardSets myset = FlashCardSets("",[]);
-
-  Future<List> addCards(){
-
+  final vocabularyController = TextEditingController();
+  final meaningController = TextEditingController();
+  bool value = true;
+  Future<List> addCards() async{
+    final response = await http.post(
+        "http://10.0.2.2/flash_card/addCard.php",
+        body: {
+          "setName": usernamesetname.setName,
+          "username": usernamesetname.username,
+          "vocabulary": vocabularyController.text,
+          "meaning": meaningController.text
+        }
+    );
+    print(response.body);
+    print(response.statusCode);
+    loadCards();
   }
 
-  Future<List> loadCards(){
+  Future<List> loadCards() async{
+    final response = await http.post(
+        "http://10.0.2.2/flash_card/loadCard.php",
+        body: {
+          "setName": usernamesetname.setName,
+          "username": usernamesetname.username
+        }
 
+    );
+    print(response.body);
+    print(response.statusCode);
   }
-
+  Future<void> OpenCupertino(){
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text('Create a new card for this set'),
+          content: Column(
+            children: <Widget>[
+              Text('please specify the term and meaning of this new card'),
+              Card(
+                color: Colors.transparent,
+                elevation: 0.0,
+                child:TextField(
+                  controller: vocabularyController,
+                  decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.lightBlue)
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      hintText: 'term'
+                  ),
+                ),
+              ),
+              Card(
+                color: Colors.transparent,
+                elevation: 0.0,
+                child:TextField(
+                  controller: meaningController,
+                  decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.lightBlue)
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)
+                      ),
+                      hintText: 'meaning'
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text('Create'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                addCards();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -31,10 +117,14 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
           .arguments;
 
       myset = FlashCardSets(usernamesetname.username,[]);
-      loadCards();
+
     });
-
-
+    if (value){
+      loadCards();
+      setState(() {
+        value = false;
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +134,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            this.setState(() {addCards();}); //use setState so that the view is reset
+            this.setState(() {OpenCupertino();}); //use setState so that the view is reset
           },
           backgroundColor: Colors.lightBlue ,
           child: Icon(Icons.add)
