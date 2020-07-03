@@ -1,8 +1,10 @@
+import 'package:flashcard/myCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcard/flash_card/Sets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flashcard/helper_classes/usernameSetname.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flashcard/flash_card/flashcard.dart';
 
 
 class ConfigureSetScreen extends StatefulWidget {
@@ -42,7 +44,27 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
 
     );
     print(response.body);
-    print(response.statusCode);
+    var myresponse = response.body.substring(1,response.body.length-1).split(",");
+    print(myresponse);
+    for (int i = 0; i < myresponse.length;++i){
+      if (i%2 == 0){
+        myresponse[i] = myresponse[i].substring(2,myresponse[i].length-1);
+      }
+      else{
+        myresponse[i] = myresponse[i].substring(1,myresponse[i].length-2);
+      }
+    }
+    for (int i = 0; i < myresponse.length; ++i){
+      if (i % 2 == 0){
+        var mycard = flashCard(myresponse[i],myresponse[i+1]);
+        setState(() {
+          myset.addFlashCard(mycard);
+        });
+      }
+    }
+    for (int i = 0; i < myset.flashCardList.length; ++i){
+      print(myset.flashCardList[i].word + " " + myset.flashCardList[i].definition);
+    }
   }
   Future<void> OpenCupertino(){
     return showDialog<void>(
