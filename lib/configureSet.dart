@@ -33,6 +33,49 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
     print(response.statusCode);
     loadCards();
   }
+  List<Widget> drawCard(){
+    List<Widget> list = new List<Widget>();
+    for (int i = 0;i < myset.getsetSize(); ++i){
+      list.add(new GestureDetector(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(5,2,5,2),
+          child: Ink(
+            color: Colors.lightBlue[100],
+            child: ListTile(
+                leading: Icon(Icons.content_copy),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(
+                        myset.flashCardList[i].word,
+                        style: TextStyle(color: Colors.indigo)
+                    ),
+                    Text(
+                        myset.flashCardList[i].definition,
+                        style: TextStyle(color: Colors.indigo)
+                    ),
+                  ],
+                ),
+                trailing: OutlineButton(
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30)),
+                  color: Colors.lightBlue[300],
+                  borderSide: BorderSide(color: Colors.blue),
+                  child: Text(
+                    "Delete",
+                    style: TextStyle(
+                        color: Colors.red
+                    ),
+                  ),
+                  onPressed: () {},
+                )
+            ),
+          ),
+        ),
+        onTap: () {},
+      ));
+    }
+    return list;
+  }
 
   Future<List> loadCards() async{
     final response = await http.post(
@@ -57,6 +100,9 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
         myresponse[i] = myresponse[i].substring(1,myresponse[i].length-2);
       }
     }
+    setState(() {
+      myset.flashCardList.clear();
+    });
     for (int i = 0; i < myresponse.length; ++i){
       if (i % 2 == 0){
         var mycard = flashCard(myresponse[i],myresponse[i+1]);
@@ -65,6 +111,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
         });
       }
     }
+    print(myset.getsetSize());
     for (int i = 0; i < myset.flashCardList.length; ++i){
       print("term: " +  myset.flashCardList[i].word + " ,meaning: " + myset.flashCardList[i].definition);
     }
@@ -134,24 +181,63 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      usernamesetname = ModalRoute
-          .of(context)
-          .settings
-          .arguments;
-      myset = FlashCardSets(usernamesetname.username,[]);
-    });
-
     if (value){
-      loadCards();
-      value = false;
+      setState(() {
+        usernamesetname = ModalRoute
+            .of(context)
+            .settings
+            .arguments;
+        myset = FlashCardSets(usernamesetname.username,[]);
+        loadCards();
+        value = false;
+      });
     }
+
 
       return Scaffold(
         appBar: AppBar(
           title: Text(
             usernamesetname.setName,
           ),
+        ),
+        body:LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraint){
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraint.maxHeight,
+                ),
+                child: Column(
+                  mainAxisAlignment:  (myset.getsetSize() == 0) ? MainAxisAlignment.center : MainAxisAlignment.start,
+                  children: <Widget>[
+
+                    if(myset.getsetSize() == 0)
+                      Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Container(
+                                height: constraint.maxHeight,
+                                child: Text(
+                                    ' No FlashCard Sets yet, you can add new flash card by tapping the right bottom button'
+                                )
+                            ),
+                          )
+                      ),
+                    if(myset.getsetSize() != 0)
+                      Container(
+                        height: constraint.maxHeight,
+                        child: ListView(
+                            children: ListTile.divideTiles(
+                                context: context,
+                                tiles: drawCard(),
+                            ).toList()
+                        ),
+                      )
+                  ],
+                ),
+              ),
+            );
+          },
         ),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
