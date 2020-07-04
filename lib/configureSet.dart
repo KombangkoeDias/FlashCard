@@ -1,4 +1,3 @@
-import 'package:flashcard/myCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcard/flash_card/Sets.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +18,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
   final vocabularyController = TextEditingController();
   final meaningController = TextEditingController();
   bool value = true;
+
   Future<List> addCards() async{
     final response = await http.post(
         "http://10.0.2.2/flash_card/addCard.php",
@@ -43,9 +43,12 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
         }
 
     );
-    print(response.body);
-    var myresponse = response.body.substring(1,response.body.length-1).split(",");
-    print(myresponse);
+    print("set: " + usernamesetname.setName + " ,flashcards: " + response.body);
+    var myresponse = [];
+    if (response.body.length != 2){
+      myresponse = response.body.substring(1,response.body.length-1).split(",");
+    }
+
     for (int i = 0; i < myresponse.length;++i){
       if (i%2 == 0){
         myresponse[i] = myresponse[i].substring(2,myresponse[i].length-1);
@@ -63,7 +66,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
       }
     }
     for (int i = 0; i < myset.flashCardList.length; ++i){
-      print(myset.flashCardList[i].word + " " + myset.flashCardList[i].definition);
+      print("term: " +  myset.flashCardList[i].word + " ,meaning: " + myset.flashCardList[i].definition);
     }
   }
   Future<void> OpenCupertino(){
@@ -79,7 +82,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
               Card(
                 color: Colors.transparent,
                 elevation: 0.0,
-                child:TextField(
+                  child:TextField(
                   controller: vocabularyController,
                   decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
@@ -131,36 +134,32 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
   }
   @override
   Widget build(BuildContext context) {
-
     setState(() {
       usernamesetname = ModalRoute
           .of(context)
           .settings
           .arguments;
-
       myset = FlashCardSets(usernamesetname.username,[]);
-
     });
+
     if (value){
       loadCards();
-      setState(() {
-        value = false;
-      });
+      value = false;
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          usernamesetname.setName,
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            usernamesetname.setName,
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            this.setState(() {OpenCupertino();}); //use setState so that the view is reset
-          },
-          backgroundColor: Colors.lightBlue ,
-          child: Icon(Icons.add)
-      ),
-    );
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              this.setState(() {OpenCupertino();}); //use setState so that the view is reset
+            },
+            backgroundColor: Colors.lightBlue ,
+            child: Icon(Icons.add)
+        ),
+      );
   }
 }
