@@ -65,7 +65,7 @@ class HomeScene extends StatelessWidget {
                 },
               ),
               ListTile(
-                  title: Text('Edit'),
+                  title: Text('Setting'),
                   onTap: () {
                     Navigator.popAndPushNamed(context, '/fourth', arguments: myuser);
                   }

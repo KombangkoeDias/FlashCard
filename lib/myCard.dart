@@ -69,7 +69,7 @@ class myCard extends StatelessWidget {
                         child: Card(
                             child: Center(
                                 child:Text(
-                                    "Edit"
+                                    "Setting"
                                 )
                             )
                         ),

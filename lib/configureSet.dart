@@ -19,6 +19,21 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
   final meaningController = TextEditingController();
   bool value = true;
 
+  Future<List> deleteCard(setName,username,vocabulary,meaning) async{
+    final response = await http.post(
+        "http://10.0.2.2/flash_card/deleteCard.php",
+        body: {
+          "setName": setName,
+          "username": username,
+          "vocabulary": vocabulary,
+          "meaning": meaning
+        }
+    );
+    print(response.statusCode);
+    print(response.body);
+    loadCards();
+  }
+
   Future<List> addCards() async{
     final response = await http.post(
         "http://10.0.2.2/flash_card/addCard.php",
@@ -66,7 +81,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
                         color: Colors.red
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {deleteCard(usernamesetname.setName,usernamesetname.username,myset.flashCardList[i].word,myset.flashCardList[i].definition);},
                 )
             ),
           ),
@@ -164,6 +179,8 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
             CupertinoDialogAction(
               child: Text('Cancel'),
               onPressed: () {
+                vocabularyController.clear();
+                meaningController.clear();
                 Navigator.of(context).pop();
               },
             ),
@@ -172,6 +189,8 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
                 addCards();
+                vocabularyController.clear();
+                meaningController.clear();
               },
             ),
           ],
@@ -218,7 +237,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
                             child: Container(
                                 height: constraint.maxHeight,
                                 child: Text(
-                                    ' No FlashCard Sets yet, you can add new flash card by tapping the right bottom button'
+                                    ' No flash cards yet, you can add new flash card by tapping the right bottom button'
                                 )
                             ),
                           )

@@ -229,7 +229,7 @@ class _FirstScreenState extends State<FirstScreen> {
                           child: Container(
                               height: constraint.maxHeight,
                               child: Text(
-                                  ' No FlashCard Sets yet, you can add new flash card by tapping the right bottom button'
+                                  ' No FlashCard Sets yet, you can add new flash card set by tapping the right bottom button'
                               )
                           ),
                         )
