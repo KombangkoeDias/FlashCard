@@ -11,7 +11,7 @@ class _SecondScreenState extends State<SecondScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Practice',
+            'Practices',
           ),
         ),
         body: Text('Practice')
