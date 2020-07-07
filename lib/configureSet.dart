@@ -19,6 +19,24 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
   final meaningController = TextEditingController();
   bool value = true;
 
+  Future<List> editCard(vocabulary,meaning,newvocabulary,newmeaning) async{
+
+    final response = await http.post(
+        "http://10.0.2.2/flash_card/editCard.php",
+
+        body: {
+          "setName": usernamesetname.setName,
+          "username": usernamesetname.username,
+          "vocabulary": vocabulary,
+          "meaning": meaning,
+          "newvocabulary": newvocabulary,
+          "newmeaning": newmeaning
+        }
+    );
+    print(response.body);
+    loadCards();
+    //print("edit " + vocabulary + " " + meaning + " with " + newvocabulary + " " + newmeaning);
+  }
   Future<List> deleteCard(setName,username,vocabulary,meaning) async{
     final response = await http.post(
         "http://10.0.2.2/flash_card/deleteCard.php",
@@ -86,7 +104,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
             ),
           ),
         ),
-        onTap: () {},
+        onTap: () {OpenCupertino(vocabulary: myset.flashCardList[i].word,meaning: myset.flashCardList[i].definition, edit: true);},
       ));
     }
     return list;
@@ -131,16 +149,18 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
       print("term: " +  myset.flashCardList[i].word + " ,meaning: " + myset.flashCardList[i].definition);
     }
   }
-  Future<void> OpenCupertino(){
+  Future<void> OpenCupertino({vocabulary:"",meaning:"", edit:false}){
+    vocabularyController.text = vocabulary;
+    meaningController.text = meaning;
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          title: Text('Create a new card for this set'),
+          title: !edit ?  Text('Create a new card for this set'): Text('Edit this card'),
           content: Column(
             children: <Widget>[
-              Text('please specify the term and meaning of this new card'),
+              !edit? Text('please specify the term and meaning of this new card'): Text("specify the change you want to make to this card"),
               Card(
                 color: Colors.transparent,
                 elevation: 0.0,
@@ -185,10 +205,15 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
               },
             ),
             CupertinoDialogAction(
-              child: Text('Create'),
+              child: !edit? Text('Create'): Text('Edit'),
               onPressed: () {
+                if (!edit){
+                  addCards();
+                }
+                else{
+                  editCard(vocabulary,meaning,vocabularyController.text,meaningController.text);
+                }
                 Navigator.of(context).pop();
-                addCards();
                 vocabularyController.clear();
                 meaningController.clear();
               },
