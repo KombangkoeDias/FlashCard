@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcard/flash_card/Sets.dart';
@@ -15,6 +17,7 @@ class _FirstScreenState extends State<FirstScreen> {
   List<Widget> nameList = [];
   List<String> setNames = [];
   String username;
+  String action = "";
 
   Future<List> deleteSet(String setName) async {
     print(setName + " " + username);
@@ -28,16 +31,17 @@ class _FirstScreenState extends State<FirstScreen> {
     loadFlashCardName();
   }
 
-  Future<void> ConfirmDelete(String setName){
+  Future<void> Actions(String setName){
+    print(action);
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          title: Text('Delete Set'),
+          title: action != "" ? (action == "edit" ? Text('Edit Set Name') : Text('Delete Set')) : Text('Choose Action'),
           content: Column(
             children: <Widget>[
-              Text('Are you sure you want to delete this \n set: ' + setName),
+              action != "" ? (action == "edit" ? Text('enter the new set name') : Text('Are you sure you want to delete this \n set: ' + setName)) : Text("Select action to perform"),
               Card(
                 color: Colors.transparent,
                 elevation: 0.0,
@@ -49,13 +53,40 @@ class _FirstScreenState extends State<FirstScreen> {
               child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
+                setState(() {
+                  action = "";
+                });
+              },
+            ),
+
+            if (action == "") CupertinoDialogAction(
+              child: Text('Edit'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/set',arguments: usernameSetname(username,setName)).then(
+                    (_){
+                      loadFlashCardName();
+                    }
+                );
               },
             ),
             CupertinoDialogAction(
               child: Text('Delete'),
               onPressed: () {
-                Navigator.of(context).pop();
-                deleteSet(setName);
+                if (action != "delete"){
+                  setState(() {
+                    action = "delete";
+                  });
+                  Navigator.of(context).pop();
+                  Actions(setName);
+                }
+                else {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    action = "";
+                  });
+                  deleteSet(setName);
+                }
               },
             ),
           ],
@@ -83,17 +114,23 @@ class _FirstScreenState extends State<FirstScreen> {
                 color: Colors.lightBlue[300],
                 borderSide: BorderSide(color: Colors.blue),
                 child: Text(
-                  "Delete",
+                  "Action",
                   style: TextStyle(
                     color: Colors.red
                   ),
                 ),
-                onPressed: () {ConfirmDelete(setNames[i]);},
+                onPressed: () {Actions(setNames[i]);},
               )
             ),
           ),
         ),
-        onTap: () {Navigator.pushNamed(context, '/set',arguments: usernameSetname(username,setNames[i]));},
+        onTap: () async {
+            Navigator.pushNamed(context, '/set',arguments: usernameSetname(username,setNames[i])).then(
+                (_) {
+                  loadFlashCardName();
+                }
+            );
+          },
       ));
     }
     return list;
@@ -155,7 +192,7 @@ class _FirstScreenState extends State<FirstScreen> {
           "username": username
         }
     );
-    print(response.body);
+    print(response.statusCode);
     nameController.clear();
     loadFlashCardName();
   }
