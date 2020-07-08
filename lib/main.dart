@@ -7,6 +7,7 @@ import 'package:flashcard/login.dart'; //loginScreen
 import 'package:flashcard/signup.dart'; //signupScreen
 import 'package:flashcard/Home.dart'; //HomeScreen
 import 'package:flashcard/configureSet.dart'; //configureSetScreen
+import 'package:flashcard/PracticeScreen.dart';
 void main() {
   runApp(MyApp());
 }
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
         '/third': (context) => ThirdScreen(),
         '/fourth': (context) => FourthScreen(),
         '/signup': (context) => SignUp(),
-        '/set': (context) => ConfigureSetScreen()
+        '/set': (context) => ConfigureSetScreen(),
+        '/practice': (context) => PracticeScreen()
       }
     );
   }
