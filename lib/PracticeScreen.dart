@@ -13,10 +13,29 @@ class _PracticeScreenState extends State<PracticeScreen> {
   bool value = true;
   usernameSetname usernamesetname;
   FlashCardSets myset;
-  flashCard currentCard;
+  flashCard currentCard = null;
+  int currentIndex = -1;
   String show = "";
   String termOrDefinition = "";
   int sequence = 1;
+
+  void NextCard(){
+    if (currentIndex < myset.getsetSize()-1 && currentIndex != -1 && currentCard != null){
+      setState(() {
+        currentIndex+= 1;
+        termOrDefinition = "term";
+      });
+    }
+  }
+
+  void PrevCard(){
+    if (currentIndex > 0 && currentIndex != -1 && currentCard != null){
+      setState(() {
+        currentIndex-= 1;
+        termOrDefinition = "term";
+      });
+    }
+  }
 
   Future<List> addProgress(flashCard flashcard) async {
     final response = await http.post(
@@ -32,6 +51,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
   }
 
   Future<List> loadCurrentCard() async{
+
     final response = await http.post(
         "http://10.0.2.2/flash_card/loadCurrentCard.php",
         body: {
@@ -42,17 +62,26 @@ class _PracticeScreenState extends State<PracticeScreen> {
     print("current card: " + response.body);
     if (response.body.length == 2){
       setState(() {
-        currentCard = myset.flashCardList[0];
-        print(currentCard.word);
-        show = currentCard.word;
-        print(currentCard.definition);
-        sequence = 1;
+        currentIndex = 0;
+        termOrDefinition = "term";
+
       });
     }
     else{
-
-
+      var newresponse = response.body.substring(1,response.body.length-1);
+      var listOfTermAndDefinition = newresponse.split(',');
+      listOfTermAndDefinition[0] = listOfTermAndDefinition[0].substring(1,listOfTermAndDefinition[0].length-1);
+      listOfTermAndDefinition[1] = listOfTermAndDefinition[1].substring(1,listOfTermAndDefinition[1].length-1);
+      for (var i = 0; i < myset.getsetSize(); ++i){
+        if (myset.flashCardList[i].word == listOfTermAndDefinition[0] && myset.flashCardList[i].definition == listOfTermAndDefinition[1]){
+          setState(() {
+            currentIndex = i;
+            termOrDefinition = "term";
+          });
+        }
+      }
     }
+
   }
 
   Future<List> loadCards() async{
@@ -99,14 +128,12 @@ class _PracticeScreenState extends State<PracticeScreen> {
   void flip(){
     if (show == currentCard.word){
       setState(() {
-        show = currentCard.definition;
-        termOrDefinition = "term";
+        termOrDefinition = "definition";
       });
     }
     else{
       setState(() {
-        show = currentCard.word;
-        termOrDefinition = "definition";
+        termOrDefinition = "term";
       });
     }
   }
@@ -127,6 +154,20 @@ class _PracticeScreenState extends State<PracticeScreen> {
         value = false;
       });
     }
+    if (currentIndex != -1){
+      setState(() {
+        currentCard = myset.flashCardList[currentIndex];
+        sequence = currentIndex+1;
+        if (termOrDefinition == 'term'){
+          show = currentCard.word;
+        }
+        else if (termOrDefinition == 'definition'){
+          show = currentCard.definition;
+        }
+        addProgress(currentCard);
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Practice set : " + usernamesetname.setName + " : " +
@@ -165,7 +206,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                     RaisedButton(
                       child: const Text('BACK'),
                       color: Colors.blue,
-                      onPressed: () {print("Back");},
+                      onPressed: () {PrevCard();},
                     ),
                     RaisedButton(
                       child: const Text('FLIP'),
@@ -175,7 +216,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                     RaisedButton(
                       child: const Text('NEXT'),
                       color: Colors.blue,
-                      onPressed: () {print("Next");},
+                      onPressed: () {NextCard();},
                     ),
                   ],
                 ),
