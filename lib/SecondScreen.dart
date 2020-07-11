@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flashcard/flash_card/Sets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flashcard/helper_classes/usernameSetname.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -16,6 +18,7 @@ class _SecondScreenState extends State<SecondScreen> {
   List<String> setNames = [];
   String username;
   String action = "";
+  bool loading = false;
 
   Future<List> Progress(String setName,) async{
     final response = await http.post(
@@ -226,7 +229,15 @@ class _SecondScreenState extends State<SecondScreen> {
           setNames[i] = setNames[i].substring(1,setNames[i].length-1);
         }
       });
+      Future.delayed(const Duration(milliseconds: 500), () {
+
+        setState(() {
+          loading = false;
+          print(loading);
+        });
+      });
       print(setNames);
+
     }
     else{
       print("error");
@@ -245,6 +256,9 @@ class _SecondScreenState extends State<SecondScreen> {
     });
 
     if (value){
+      setState(() {
+        loading = true;
+      });
       loadFlashCardName();
       setState(() {
         value = false;
@@ -259,40 +273,54 @@ class _SecondScreenState extends State<SecondScreen> {
       ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraint){
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraint.maxHeight,
-              ),
-              child: Column(
-                mainAxisAlignment:  (setNames.length == 0) ? MainAxisAlignment.center : MainAxisAlignment.start,
-                children: <Widget>[
+          return Builder(
+            builder: (context) {
+              if (loading){
+                return Center(
+                    child: SpinKitRotatingCircle(
+                      color: Colors.blue,
+                      size: 50.0,
+                    )
+                );
+              }
+              else{
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraint.maxHeight,
+                    ),
+                    child: Column(
+                      mainAxisAlignment:  (setNames.length == 0) ? MainAxisAlignment.center : MainAxisAlignment.start,
+                      children: <Widget>[
 
-                  if(setNames.length == 0)
-                    Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Container(
-                              height: constraint.maxHeight,
-                              child: Text(
-                                  ' No FlashCard Sets yet, you can add new flash card set by tapping the right bottom button'
+                        if(setNames.length == 0)
+                          Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Container(
+                                    height: constraint.maxHeight,
+                                    child: Text(
+                                        ' No FlashCard Sets yet, you can add new flash card set by tapping the right bottom button'
+                                    )
+                                ),
                               )
                           ),
-                        )
+                        if(setNames.length != 0)
+                          Container(
+                            height: constraint.maxHeight,
+                            child: ListView(
+                                children: ListTile.divideTiles(
+                                    context: context,
+                                    tiles: addNameList()
+                                ).toList()
+                            ),
+                          )
+                      ],
                     ),
-                  if(setNames.length != 0)
-                    Container(
-                      height: constraint.maxHeight,
-                      child: ListView(
-                          children: ListTile.divideTiles(
-                              context: context,
-                              tiles: addNameList()
-                          ).toList()
-                      ),
-                    )
-                ],
-              ),
-            ),
+                  ),
+                );
+              }
+            }
           );
         },
       ),

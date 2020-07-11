@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:flashcard/helper_classes/usernameSetname.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flashcard/flash_card/flashcard.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 
 
 class ConfigureSetScreen extends StatefulWidget {
@@ -18,6 +20,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
   final vocabularyController = TextEditingController();
   final meaningController = TextEditingController();
   bool value = true;
+  bool loading = false;
 
   Future<List> editSetName(newSetName) async{
     final response = await http.post(
@@ -171,6 +174,12 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
     for (int i = 0; i < myset.flashCardList.length; ++i){
       print("term: " +  myset.flashCardList[i].word + " ,meaning: " + myset.flashCardList[i].definition);
     }
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {
+        loading = false;
+        print(loading);
+      });
+    });
   }
 
   Future<void> OpenCupertino({vocabulary:"",meaning:"", edit:false, editSetName: false}){
@@ -260,6 +269,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
             .settings
             .arguments;
         myset = FlashCardSets(usernamesetname.username,[]);
+        loading = true;
         loadCards();
         value = false;
       });
@@ -276,40 +286,54 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
         ),
         body:LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraint){
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraint.maxHeight,
-                ),
-                child: Column(
-                  mainAxisAlignment:  (myset.getsetSize() == 0) ? MainAxisAlignment.center : MainAxisAlignment.start,
-                  children: <Widget>[
+            return Builder(
+              builder: (context) {
+                if (loading){
+                  return Center(
+                      child: SpinKitRotatingCircle(
+                        color: Colors.blue,
+                        size: 50.0,
+                      )
+                  );
+                }
+                else{
+                  return SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraint.maxHeight,
+                      ),
+                      child: Column(
+                        mainAxisAlignment:  (myset.getsetSize() == 0) ? MainAxisAlignment.center : MainAxisAlignment.start,
+                        children: <Widget>[
 
-                    if(myset.getsetSize() == 0)
-                      Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Container(
-                                height: constraint.maxHeight,
-                                child: Text(
-                                    ' No flash cards yet, you can add new flash card by tapping the right bottom button'
+                          if(myset.getsetSize() == 0)
+                            Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Container(
+                                      height: constraint.maxHeight,
+                                      child: Text(
+                                          ' No flash cards yet, you can add new flash card by tapping the right bottom button'
+                                      )
+                                  ),
                                 )
                             ),
-                          )
+                          if(myset.getsetSize() != 0)
+                            Container(
+                              height: constraint.maxHeight,
+                              child: ListView(
+                                  children: ListTile.divideTiles(
+                                    context: context,
+                                    tiles: drawCard(),
+                                  ).toList()
+                              ),
+                            )
+                        ],
                       ),
-                    if(myset.getsetSize() != 0)
-                      Container(
-                        height: constraint.maxHeight,
-                        child: ListView(
-                            children: ListTile.divideTiles(
-                                context: context,
-                                tiles: drawCard(),
-                            ).toList()
-                        ),
-                      )
-                  ],
-                ),
-              ),
+                    ),
+                  );
+                }
+              },
             );
           },
         ),

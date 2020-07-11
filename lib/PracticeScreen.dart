@@ -81,7 +81,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
         }
       }
     }
-
   }
 
   Future<List> loadCards() async{
@@ -97,32 +96,36 @@ class _PracticeScreenState extends State<PracticeScreen> {
     var myresponse = [];
     if (response.body.length != 2){
       myresponse = response.body.substring(1,response.body.length-1).split(",");
+
+      for (int i = 0; i < myresponse.length;++i){
+        if (i%2 == 0){
+          myresponse[i] = myresponse[i].substring(2,myresponse[i].length-1);
+        }
+        else{
+          myresponse[i] = myresponse[i].substring(1,myresponse[i].length-2);
+        }
+      }
+      setState(() {
+        myset.flashCardList.clear();
+      });
+      for (int i = 0; i < myresponse.length; ++i){
+        if (i % 2 == 0){
+          var mycard = flashCard(myresponse[i],myresponse[i+1]);
+          setState(() {
+            myset.addFlashCard(mycard);
+          });
+        }
+      }
+      print("myset's size : " + myset.getsetSize().toString());
+      for (int i = 0; i < myset.flashCardList.length; ++i){
+        print("term: " +  myset.flashCardList[i].word + " ,meaning: " + myset.flashCardList[i].definition);
+      }
+      loadCurrentCard();
     }
 
-    for (int i = 0; i < myresponse.length;++i){
-      if (i%2 == 0){
-        myresponse[i] = myresponse[i].substring(2,myresponse[i].length-1);
-      }
-      else{
-        myresponse[i] = myresponse[i].substring(1,myresponse[i].length-2);
-      }
+    else{
+
     }
-    setState(() {
-      myset.flashCardList.clear();
-    });
-    for (int i = 0; i < myresponse.length; ++i){
-      if (i % 2 == 0){
-        var mycard = flashCard(myresponse[i],myresponse[i+1]);
-        setState(() {
-          myset.addFlashCard(mycard);
-        });
-      }
-    }
-    print("myset's size : " + myset.getsetSize().toString());
-    for (int i = 0; i < myset.flashCardList.length; ++i){
-      print("term: " +  myset.flashCardList[i].word + " ,meaning: " + myset.flashCardList[i].definition);
-    }
-    loadCurrentCard();
   }
 
   void flip(){
@@ -148,9 +151,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
             .arguments;
         myset = FlashCardSets(usernamesetname.username,[]);
         loadCards();
-        var a = "[word,definition]";
-        var newresponse = a.substring(1,a.length-1).split(',');
-        print(newresponse[0] + " " + newresponse[1]);
         value = false;
       });
     }
@@ -174,55 +174,65 @@ class _PracticeScreenState extends State<PracticeScreen> {
             termOrDefinition + " " + sequence.toString())
       ),
       body: Center(
-        child: Card(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                GestureDetector(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        child: Center(
-                          child: Text(
-                              show,
-                              style: TextStyle(
-                                  fontSize: 30
-                              )
-                          ),
-                        ),
-                        height: 300,
-
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                      flip();
-                  },
-                ),
-                ButtonBar(
-                  alignment: MainAxisAlignment.spaceEvenly,
+        child: Builder(
+          builder: (context) {
+            if (myset.getsetSize() == 0){
+              return Text("no cards");
+            }
+            else{
+              return Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    RaisedButton(
-                      child: const Text('BACK'),
-                      color: Colors.blue,
-                      onPressed: () {PrevCard();},
+                    GestureDetector(
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            child: Center(
+                              child: Text(
+                                  show,
+                                  style: TextStyle(
+                                      fontSize: 30
+                                  )
+                              ),
+                            ),
+                            height: 300,
+
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        flip();
+                      },
                     ),
-                    RaisedButton(
-                      child: const Text('FLIP'),
-                      color: Colors.blue,
-                      onPressed: () {flip();},
-                    ),
-                    RaisedButton(
-                      child: const Text('NEXT'),
-                      color: Colors.blue,
-                      onPressed: () {NextCard();},
+                    ButtonBar(
+                      alignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        RaisedButton(
+                          child: const Text('BACK'),
+                          color: Colors.blue,
+                          onPressed: () {PrevCard();},
+                        ),
+                        RaisedButton(
+                          child: const Text('FLIP'),
+                          color: Colors.blue,
+                          onPressed: () {flip();},
+                        ),
+                        RaisedButton(
+                          child: const Text('NEXT'),
+                          color: Colors.blue,
+                          onPressed: () {NextCard();},
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
+              );
+            }
+          }
+
+        ),
       )
     );
   }
