@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcard/myCard.dart';
-
+import 'package:flashcard/helper_functions/files.dart';
 class HomeScene extends StatelessWidget {
   @override
 
@@ -72,7 +72,9 @@ class HomeScene extends StatelessWidget {
               ),
               ListTile(
                   title: Text('logout'),
-                  onTap: () {
+                  onTap: () async {
+                    await deleteUser();
+                    print("user deleted");
                     Navigator.popAndPushNamed(context, '/');
                   }
               ),

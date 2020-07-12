@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flashcard/helper_functions/files.dart';
 
 class LogIn extends StatefulWidget {
   @override
@@ -8,8 +9,12 @@ class LogIn extends StatefulWidget {
 
 class _LogInState extends State<LogIn> {
   bool value = true;
+  bool onetime = true;
+  bool remember = false;
   final UsernameController = TextEditingController();
   final PasswordController = TextEditingController();
+
+
   Future<List> userLogIn() async {
 
     try {
@@ -30,6 +35,7 @@ class _LogInState extends State<LogIn> {
         setState(() {
           value = true;
         });
+
       }
     }
     catch(e){
@@ -38,6 +44,10 @@ class _LogInState extends State<LogIn> {
       });
     }
     if (value){
+      if (remember){
+        await writeUser(UsernameController.text);
+        print("write");
+      }
       Navigator.popAndPushNamed(context, '/home',arguments: UsernameController.text);
     }
   }
@@ -49,181 +59,216 @@ class _LogInState extends State<LogIn> {
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
+      if (onetime){
+        readUser().then((user) {
+          print(user);
+          if (user != 'error'){
+            Navigator.popAndPushNamed(context, '/home', arguments: user);
+          }
+        });
+        setState(() {
+          onetime = false;
+        });
+      }
 
-              children: <Widget>[
-                SizedBox(
-                  width: 100,
-                  height: 100,
-                ),
-                SizedBox(
-                  width: 100.0,
-                  height: 100.0,
-                  child: Image(image: AssetImage('lib/Assets/logo.png')) //logo
-                ),
-                SizedBox(
-                  width: 100,
-                  height: 40,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Log In",
-                      style: TextStyle(
-                        color: Colors.lightBlue,
-                        fontSize: 40
+      return Scaffold(
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+
+                children: <Widget>[
+                  SizedBox(
+                    width: 100,
+                    height: 100,
+                  ),
+                  SizedBox(
+                      width: 100.0,
+                      height: 100.0,
+                      child: Image(
+                          image: AssetImage('lib/Assets/logo.png')) //logo
+                  ),
+                  SizedBox(
+                    width: 100,
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                          "Log In",
+                          style: TextStyle(
+                              color: Colors.lightBlue,
+                              fontSize: 40
+                          )
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                      height: 50,
+                      width: 400,
+                      child: Visibility(
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        visible: !value,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                                "Incorrect Username or Password",
+                                style: TextStyle(
+                                    color: Colors.redAccent
+                                )
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                    "Don't have an account? Sign Up "
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/signup');
+                                  },
+                                  child: Text(
+                                      "Here",
+                                      style: TextStyle(
+                                          color: Colors.lightBlue
+                                      )
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       )
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 50,
-                  width: 400,
-                    child: Visibility(
-                      maintainSize: true,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      visible: !value,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        width: 300,
+                        height: 60,
+                        child: TextField(
+                          controller: UsernameController,
+                          decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.lightBlue)
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey)
+                              ),
+                              hintText: 'Username'
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    width: 300,
+                    height: 40,
+
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        width: 300,
+                        height: 60,
+                        child: TextField(
+                          obscureText: true,
+                          controller: PasswordController,
+                          decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.lightBlue)
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey)
+                              ),
+                              hintText: 'Password'
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                      width: 200,
+                      height: 100,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            "Incorrect Username or Password",
-                            style: TextStyle(
-                              color: Colors.redAccent
-                            )
+                              'forget username or password?'
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                "Don't have an account? Sign Up "
-                              ),
-                              GestureDetector(
-                                onTap: () {Navigator.pushNamed(context, '/signup');},
-                                child: Text(
-                                  "Here",
-                                  style: TextStyle(
-                                    color: Colors.lightBlue
-                                  )
-                                ),
-                              )
-                            ],
+                          CheckboxListTile(
+                            value: remember,
+                            onChanged: (bool value) {
+                              setState(() {
+                                remember = value;
+                              });
+                            },
+                            title: Text(
+                                "remember me"
+                            ),
+
                           )
                         ],
-                      ),
-                    )
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 300,
-                      height: 60,
-                      child: TextField(
-                        controller: UsernameController,
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.lightBlue)
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey)
-                          ),
-                          hintText: 'Username'
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  width: 300,
-                  height: 40,
-
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 300,
-                      height: 60,
-                      child: TextField(
-                        obscureText: true,
-                        controller: PasswordController,
-                        decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.lightBlue)
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)
-                            ),
-                            hintText: 'Password'
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                    width: 300,
-                    height: 50,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                            'forget username or password?'
-                        ),
-                      ],
-                    )
-                ),
-                FlatButton(
-                  color: Colors.lightBlue,
-
-                  child: SizedBox(
-                    width: 100,
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Log In',
-                          style: TextStyle(
-                            fontSize: 20
-                          )
-                        ),
-                      ],
-                    ),
+                      )
                   ),
-                  onPressed: () {userLogIn();},
-                ),
-                SizedBox(
-                  height: 30,
-                  width: 100,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  FlatButton(
+                    color: Colors.lightBlue,
+
+                    child: SizedBox(
+                      width: 100,
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                              'Log In',
+                              style: TextStyle(
+                                  fontSize: 20
+                              )
+                          ),
+                        ],
+                      ),
+                    ),
+                    onPressed: () {
+                      userLogIn();
+                    },
+                  ),
+                  SizedBox(
+                    height: 30,
+                    width: 100,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
 
                       Text("Don't have account yet? Sign Up "),
                       GestureDetector(
-                        onTap: () {Navigator.pushNamed(context, '/signup');},
-                        child: Text(
-                          "Here",
-                          style: TextStyle(
-                            color: Colors.lightBlue
+                          onTap: () {
+                            Navigator.pushNamed(context, '/signup');
+                          },
+                          child: Text(
+                              "Here",
+                              style: TextStyle(
+                                  color: Colors.lightBlue
+                              )
                           )
-                        )
                       )
                     ],
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-        )
-    );
-  }
+          )
+      );
+    }
 }
