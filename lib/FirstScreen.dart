@@ -126,7 +126,7 @@ class _FirstScreenState extends State<FirstScreen> {
         ),
         onTap: () async {
             Navigator.pushNamed(context, '/set',arguments: usernameSetname(username,setNames[i])).then(
-                (_) {
+                    (_) {
                   loadFlashCardName();
                 }
             );
