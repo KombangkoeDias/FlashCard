@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flashcard/helper_functions/files.dart';
+import 'package:flashcard/helper_functions/settings.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 
 class LogIn extends StatefulWidget {
   @override
@@ -11,13 +14,16 @@ class _LogInState extends State<LogIn> {
   bool value = true;
   bool onetime = true;
   bool remember = false;
+  bool loading = false;
   final UsernameController = TextEditingController();
   final PasswordController = TextEditingController();
+  MaterialColor ThemeColor = Colors.lightBlue;
 
 
   Future<List> userLogIn() async {
 
     try {
+
       final response = await http.post(
           "http://10.0.2.2/flash_card/login.php",
           body: {
@@ -64,17 +70,40 @@ class _LogInState extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
       if (onetime){
+        loading = true;
         readUser().then((user) {
           print(user);
           if (user != 'error'){
             Navigator.popAndPushNamed(context, '/home', arguments: user);
           }
         });
-        setState(() {
+        readColor().then((color) async {
+          if (color == Colors.lightBlue){
+            await writeColor('blue');
+            var newcolor = await readColor();
+            setState(() {
+              ThemeColor = newcolor['ThemeColor'];
+            });
+          }
+          else{
+            setState(() {
+              ThemeColor = color['ThemeColor'];
+            });
+          }
           onetime = false;
+          loading = false;
         });
-      }
 
+      }
+      if (loading){
+        return Center(
+            child: SpinKitChasingDots(
+              color: Colors.blue,
+              size: 50.0,
+            )
+        );
+      }
+      else
       return Scaffold(
           body: SafeArea(
             child: SingleChildScrollView(
@@ -101,7 +130,7 @@ class _LogInState extends State<LogIn> {
                       Text(
                           "Log In",
                           style: TextStyle(
-                              color: Colors.lightBlue,
+                              color: ThemeColor,
                               fontSize: 40
                           )
                       ),
@@ -137,7 +166,7 @@ class _LogInState extends State<LogIn> {
                                   child: Text(
                                       "Here",
                                       style: TextStyle(
-                                          color: Colors.lightBlue
+                                          color: ThemeColor
                                       )
                                   ),
                                 )
@@ -158,7 +187,7 @@ class _LogInState extends State<LogIn> {
                           decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Colors.lightBlue)
+                                      color: ThemeColor)
                               ),
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.grey)
@@ -186,7 +215,7 @@ class _LogInState extends State<LogIn> {
                           decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Colors.lightBlue)
+                                      color: ThemeColor)
                               ),
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.grey)
@@ -222,7 +251,7 @@ class _LogInState extends State<LogIn> {
                       )
                   ),
                   FlatButton(
-                    color: Colors.lightBlue,
+                    color: ThemeColor,
 
                     child: SizedBox(
                       width: 100,
@@ -259,7 +288,7 @@ class _LogInState extends State<LogIn> {
                           child: Text(
                               "Here",
                               style: TextStyle(
-                                  color: Colors.lightBlue
+                                  color: ThemeColor
                               )
                           )
                       )

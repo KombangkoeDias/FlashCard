@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flashcard/helper_functions/settings.dart';
 
 class FourthScreen extends StatefulWidget {
   @override
@@ -31,25 +32,25 @@ class _FourthScreenState extends State<FourthScreen> {
                     child: Text(
                         "Blue (default)"
                     ),
-                    onPressed: () {print("Blue");},
+                    onPressed: () {writeColor('blue'); Navigator.of(context).pop();},
                   ),
                   RaisedButton(
                     child: Text(
                       "Green"
                     ),
-                    onPressed: () {print("Green");},
+                    onPressed: () {writeColor('green'); Navigator.of(context).pop();},
                   ),
                   RaisedButton(
                     child: Text(
                         "Red"
                     ),
-                    onPressed: () {print("Red");},
+                    onPressed: () {writeColor('red'); Navigator.of(context).pop(); },
                   ),
                   RaisedButton(
                     child: Text(
                         "Yellow"
                     ),
-                    onPressed: () {print("Yellow");},
+                    onPressed: () {writeColor('yellow'); Navigator.of(context).pop();},
                   )
                 ],
               )
@@ -92,7 +93,7 @@ class _FourthScreenState extends State<FourthScreen> {
           child: Ink(
             color: Colors.lightBlue[100],
             child: ListTile(
-              leading: Icon(Icons.content_copy),
+              leading: Icon(Icons.settings),
               title: Text(
                   Settings[i],
                   style: TextStyle(color: Colors.indigo)

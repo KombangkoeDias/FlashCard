@@ -2,7 +2,31 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcard/myCard.dart';
 import 'package:flashcard/helper_functions/files.dart';
-class HomeScene extends StatelessWidget {
+import 'package:flashcard/helper_functions/settings.dart';
+
+class HomeScene extends StatefulWidget {
+  @override
+  _HomeSceneState createState() => _HomeSceneState();
+}
+
+class _HomeSceneState extends State<HomeScene> {
+  MaterialColor ThemeColor = Colors.lightBlue;
+  Color TextColor = Colors.lightBlue;
+  bool onetime = true;
+
+  Future<void> loadColor(){
+      readColor().then((color) {
+        setState(() {
+          ThemeColor = color['ThemeColor'];
+          TextColor = color['TextColor'];
+          onetime = false;
+        });
+        Future.delayed(const Duration(milliseconds: 500), () {
+          loadColor();
+        });
+      });
+
+  }
   @override
 
   Widget build(BuildContext context) {
@@ -12,11 +36,24 @@ class HomeScene extends StatelessWidget {
         .settings
         .arguments;
     String myuser = username;
+    if (onetime){
+      loadColor();
+    }
+
+
+
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: TextColor
+        ),
+        backgroundColor: ThemeColor,
         title: Center(
           child: Text(
             'Flash Cards',
+            style: TextStyle(
+              color: TextColor
+            )
           ),
         ),
       ),
@@ -43,7 +80,7 @@ class HomeScene extends StatelessWidget {
                   ],
                 ), //logo,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: ThemeColor,
                 ),
               ),
               ListTile(

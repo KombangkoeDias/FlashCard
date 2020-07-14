@@ -1,9 +1,9 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flashcard/helper_classes/usernameSetname.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flashcard/helper_functions/settings.dart';
 
 class FirstScreen extends StatefulWidget {
   @override
@@ -18,6 +18,9 @@ class _FirstScreenState extends State<FirstScreen> {
   String username;
   String action = "";
   bool loading = false;
+  MaterialColor ThemeColor = Colors.lightBlue;
+  Color TextColor;
+  MaterialColor ActionColor;
 
   Future<List> deleteSet(String setName) async {
     print(setName + " " + username);
@@ -102,21 +105,21 @@ class _FirstScreenState extends State<FirstScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(5,2,5,2),
           child: Ink(
-            color: Colors.lightBlue[100],
+            color: ThemeColor[100],
             child: ListTile(
               leading: Icon(Icons.content_copy),
               title: Text(
                   setNames[i],
-                style: TextStyle(color: Colors.indigo)
+                style: TextStyle(color: TextColor)
               ),
               trailing: OutlineButton(
                 shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30)),
-                color: Colors.lightBlue[300],
+                color: ThemeColor[300],
                 borderSide: BorderSide(color: Colors.blue),
                 child: Text(
                   "Action",
                   style: TextStyle(
-                    color: Colors.red
+                    color: ActionColor
                   ),
                 ),
                 onPressed: () {Actions(setNames[i]);},
@@ -219,7 +222,6 @@ class _FirstScreenState extends State<FirstScreen> {
         }
       });
       Future.delayed(const Duration(milliseconds: 500), () {
-
         setState(() {
           loading = false;
           print(loading);
@@ -248,18 +250,31 @@ class _FirstScreenState extends State<FirstScreen> {
         loading = true;
         print(loading);
       });
-      loadFlashCardName();
-
-      setState(() {
-        value = false;
+      readColor().then((color) {
+        setState(() {
+          ThemeColor = color['ThemeColor'];
+          TextColor = color['TextColor'];
+          ActionColor = color['ActionColor'];
+        });
+        loadFlashCardName();
+        setState(() {
+          value = false;
+        });
       });
     }
 
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: ThemeColor,
           title: Text(
-              'Your Flash Card Sets',
+            'Your Flash Card Sets',
+              style: TextStyle(
+                color: TextColor
+              ),
             ),
+          iconTheme: IconThemeData(
+            color: TextColor
+          ) ,
         ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraint){
@@ -268,7 +283,7 @@ class _FirstScreenState extends State<FirstScreen> {
                 if (loading){
                   return Center(
                     child: SpinKitRotatingCircle(
-                        color: Colors.blue,
+                        color: ThemeColor,
                         size: 50.0,
                       )
                   );
@@ -317,7 +332,7 @@ class _FirstScreenState extends State<FirstScreen> {
         onPressed: () {
             this.setState(() {OpenCupertino();}); //use setState so that the view is reset
           },
-          backgroundColor: Colors.lightBlue ,
+          backgroundColor: ThemeColor,
                       child: Icon(Icons.add)
       ),
     );
