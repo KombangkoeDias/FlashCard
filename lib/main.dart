@@ -8,6 +8,11 @@ import 'package:flashcard/signup.dart'; //signupScreen
 import 'package:flashcard/Home.dart'; //HomeScreen
 import 'package:flashcard/configureSet.dart'; //configureSetScreen
 import 'package:flashcard/PracticeScreen.dart';
+
+/*
+Date of finished 15/7/2020
+ */
+
 void main() {
   runApp(MyApp());
 }
