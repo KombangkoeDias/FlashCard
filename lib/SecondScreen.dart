@@ -1,10 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flashcard/flash_card/Sets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flashcard/helper_classes/usernameSetname.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flashcard/helper_functions/settings.dart';
 
 
 class SecondScreen extends StatefulWidget {
@@ -19,6 +19,8 @@ class _SecondScreenState extends State<SecondScreen> {
   String username;
   String action = "";
   bool loading = false;
+  MaterialColor ThemeColor = Colors.lightBlue;
+  Color TextColor = Colors.black;
 
   Future<List> Progress(String setName,) async{
     final response = await http.post(
@@ -117,16 +119,16 @@ class _SecondScreenState extends State<SecondScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(5,2,5,2),
           child: Ink(
-            color: Colors.lightBlue[100],
+            color: ThemeColor[100],
             child: ListTile(
                 leading: Icon(Icons.content_copy),
                 title: Text(
                     setNames[i],
-                    style: TextStyle(color: Colors.indigo)
+                    style: TextStyle(color: TextColor)
                 ),
                 trailing: OutlineButton(
                   shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30)),
-                  color: Colors.lightBlue[300],
+                  color: ThemeColor[300],
                   borderSide: BorderSide(color: Colors.blue),
                   child: Text(
                     "Progress",
@@ -245,6 +247,15 @@ class _SecondScreenState extends State<SecondScreen> {
 
   }
 
+  void loadColor(){
+    readColor().then((color) {
+      setState(() {
+        ThemeColor = color['ThemeColor'];
+        TextColor = color['TextColor'];
+      });
+    });
+  }
+
   bool value = true;
   @override
   Widget build(BuildContext context) {
@@ -260,6 +271,7 @@ class _SecondScreenState extends State<SecondScreen> {
         loading = true;
       });
       loadFlashCardName();
+      loadColor();
       setState(() {
         value = false;
       });
@@ -267,8 +279,12 @@ class _SecondScreenState extends State<SecondScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ThemeColor,
         title: Text(
           'Practices',
+          style: TextStyle(
+            color: TextColor
+          )
         ),
       ),
       body: LayoutBuilder(
@@ -278,7 +294,7 @@ class _SecondScreenState extends State<SecondScreen> {
               if (loading){
                 return Center(
                     child: SpinKitRotatingCircle(
-                      color: Colors.blue,
+                      color: ThemeColor,
                       size: 50.0,
                     )
                 );

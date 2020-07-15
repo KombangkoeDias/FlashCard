@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flashcard/flash_card/Sets.dart';
 import 'package:flashcard/flash_card/flashcard.dart';
+import 'package:flashcard/helper_functions/settings.dart';
 
 
 class ThirdScreen extends StatefulWidget {
@@ -18,6 +19,8 @@ class _ThirdScreenState extends State<ThirdScreen> {
   List<int> currentIndices = List<int>();
   FlashCardSets myset = FlashCardSets("",[]);
   List<bool> finishedSets = List<bool>();
+  MaterialColor ThemeColor =Colors.blueGrey;
+  Color TextColor = Colors.black;
 
   void initFinishedSets() {
     for (int i = 0 ;i < setNames.length; ++i){
@@ -68,12 +71,12 @@ class _ThirdScreenState extends State<ThirdScreen> {
         list.add(Padding(
           padding: const EdgeInsets.fromLTRB(5,2,5,2),
           child: Ink(
-            color: Colors.lightBlue[100],
+            color: ThemeColor[100],
             child: ListTile(
                 leading: Icon(Icons.content_copy),
                 title: Text(
                     setNames[i],
-                    style: TextStyle(color: Colors.indigo)
+                    style: TextStyle(color: TextColor)
                 ),
 
             ),
@@ -182,6 +185,15 @@ class _ThirdScreenState extends State<ThirdScreen> {
     }
   }
 
+  void loadColor(){
+    readColor().then((color) {
+      setState(() {
+        ThemeColor = color['ThemeColor'];
+        TextColor = color['TextColor'];
+      });
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -193,6 +205,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
     });
     if (value){
       loading = true;
+      loadColor();
       loadFlashCardName().then(
           (val) async {
             for (int i = 0 ; i < setNames.length; ++i){
@@ -203,7 +216,6 @@ class _ThirdScreenState extends State<ThirdScreen> {
               loading = false;
             });
           }
-
       );
 
       setState(() {
@@ -214,6 +226,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
 
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: ThemeColor,
           title: Text(
             'Achievement : Finished Sets',
           ),
@@ -225,7 +238,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
                   if (loading ){
                     return Center(
                         child: SpinKitRotatingCircle(
-                          color: Colors.blue,
+                          color: ThemeColor,
                           size: 50.0,
                         )
                     );
@@ -239,7 +252,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
                         Center(
                           child: Text("You don't have any finished sets yet \n go practice more!",
                           style: TextStyle(
-                            color: Colors.indigo,
+                            color: TextColor,
                             fontSize: 20,
 
                           ),)

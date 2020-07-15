@@ -18,7 +18,7 @@ class _FirstScreenState extends State<FirstScreen> {
   String username;
   String action = "";
   bool loading = false;
-  MaterialColor ThemeColor = Colors.lightBlue;
+  var ThemeColor = Colors.lightBlue;
   Color TextColor;
   MaterialColor ActionColor;
 
@@ -256,10 +256,10 @@ class _FirstScreenState extends State<FirstScreen> {
           TextColor = color['TextColor'];
           ActionColor = color['ActionColor'];
         });
-        loadFlashCardName();
-        setState(() {
-          value = false;
-        });
+      });
+      loadFlashCardName();
+      setState(() {
+        value = false;
       });
     }
 

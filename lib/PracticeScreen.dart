@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flashcard/helper_classes/usernameSetname.dart';
 import 'package:flashcard/flash_card/flashcard.dart';
 import 'package:http/http.dart' as http;
+import 'package:flashcard/helper_functions/settings.dart';
 
 class PracticeScreen extends StatefulWidget {
   @override
@@ -18,6 +19,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
   String show = "";
   String termOrDefinition = "";
   int sequence = 1;
+  MaterialColor ThemeColor = Colors.lightBlue;
+  Color TextColor = Colors.black;
 
   void NextCard(){
     if (currentIndex < myset.getsetSize()-1 && currentIndex != -1 && currentCard != null){
@@ -141,6 +144,16 @@ class _PracticeScreenState extends State<PracticeScreen> {
     }
   }
 
+  void loadColor(){
+    readColor().then((color) {
+      setState(() {
+        ThemeColor = color['ThemeColor'];
+        TextColor = color['TextColor'];
+      });
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (value){
@@ -151,6 +164,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
             .arguments;
         myset = FlashCardSets(usernamesetname.username,[]);
         loadCards();
+        loadColor();
         value = false;
       });
     }
@@ -170,6 +184,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ThemeColor,
         title: Text("Practice set : " + usernamesetname.setName + " : " +
             termOrDefinition + " " + sequence.toString())
       ),
@@ -193,12 +208,12 @@ class _PracticeScreenState extends State<PracticeScreen> {
                               child: Text(
                                   show,
                                   style: TextStyle(
-                                      fontSize: 30
+                                      fontSize: 30,
+                                    color: TextColor
                                   )
                               ),
                             ),
                             height: 300,
-
                           ),
                         ],
                       ),
@@ -211,17 +226,17 @@ class _PracticeScreenState extends State<PracticeScreen> {
                       children: <Widget>[
                         RaisedButton(
                           child: const Text('BACK'),
-                          color: Colors.blue,
+                          color: ThemeColor,
                           onPressed: () {PrevCard();},
                         ),
                         RaisedButton(
                           child: const Text('FLIP'),
-                          color: Colors.blue,
+                          color: ThemeColor,
                           onPressed: () {flip();},
                         ),
                         RaisedButton(
                           child: const Text('NEXT'),
-                          color: Colors.blue,
+                          color: ThemeColor,
                           onPressed: () {NextCard();},
                         ),
                       ],

@@ -5,6 +5,7 @@ import 'package:flashcard/helper_classes/usernameSetname.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flashcard/flash_card/flashcard.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flashcard/helper_functions/settings.dart';
 
 
 
@@ -21,6 +22,8 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
   final meaningController = TextEditingController();
   bool value = true;
   bool loading = false;
+  MaterialColor ThemeColor = Colors.lightBlue;
+  Color TextColor = Colors.black;
 
   Future<List> editSetName(newSetName) async{
     final response = await http.post(
@@ -40,8 +43,6 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
       });
     }
   }
-
-
 
   Future<List> editCard(vocabulary,meaning,newvocabulary,newmeaning) async{
 
@@ -99,7 +100,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(5,2,5,2),
           child: Ink(
-            color: Colors.lightBlue[100],
+            color: ThemeColor[100],
             child: ListTile(
                 leading: Icon(Icons.content_copy),
                 title: Row(
@@ -107,17 +108,17 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
                   children: <Widget>[
                     Text(
                         myset.flashCardList[i].word,
-                        style: TextStyle(color: Colors.indigo)
+                        style: TextStyle(color: TextColor)
                     ),
                     Text(
                         myset.flashCardList[i].definition,
-                        style: TextStyle(color: Colors.indigo)
+                        style: TextStyle(color: TextColor)
                     ),
                   ],
                 ),
                 trailing: OutlineButton(
                   shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30)),
-                  color: Colors.lightBlue[300],
+                  color: ThemeColor[300],
                   borderSide: BorderSide(color: Colors.blue),
                   child: Text(
                     "Delete",
@@ -260,9 +261,21 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
       },
     );
   }
+
+  void loadColor(){
+    readColor().then((color) {
+      setState(() {
+        ThemeColor = color['ThemeColor'];
+        TextColor = color['TextColor'];
+      });
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (value){
+      loadColor();
       setState(() {
         usernamesetname = ModalRoute
             .of(context)
@@ -277,6 +290,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
 
       return Scaffold(
         appBar: AppBar(
+          backgroundColor: ThemeColor,
           title: GestureDetector(
             child: Text(
               usernamesetname.setName,
@@ -291,7 +305,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
                 if (loading){
                   return Center(
                       child: SpinKitRotatingCircle(
-                        color: Colors.blue,
+                        color: ThemeColor,
                         size: 50.0,
                       )
                   );
@@ -305,7 +319,6 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
                       child: Column(
                         mainAxisAlignment:  (myset.getsetSize() == 0) ? MainAxisAlignment.center : MainAxisAlignment.start,
                         children: <Widget>[
-
                           if(myset.getsetSize() == 0)
                             Center(
                                 child: Padding(
@@ -341,7 +354,7 @@ class _ConfigureSetScreenState extends State<ConfigureSetScreen> {
             onPressed: () {
               this.setState(() {OpenCupertino();}); //use setState so that the view is reset
             },
-            backgroundColor: Colors.lightBlue ,
+            backgroundColor: ThemeColor ,
             child: Icon(Icons.add)
         ),
       );

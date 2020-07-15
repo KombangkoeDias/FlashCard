@@ -11,16 +11,19 @@ class HomeScene extends StatefulWidget {
 
 class _HomeSceneState extends State<HomeScene> {
   MaterialColor ThemeColor = Colors.lightBlue;
-  Color TextColor = Colors.lightBlue;
+  Color TextColor = Colors.black;
   bool onetime = true;
 
   Future<void> loadColor(){
       readColor().then((color) {
-        setState(() {
-          ThemeColor = color['ThemeColor'];
-          TextColor = color['TextColor'];
-          onetime = false;
-        });
+        if (color['ThemeColor'] != ThemeColor){
+          setState(() {
+            ThemeColor = color['ThemeColor'];
+            TextColor = color['TextColor'];
+
+          });
+        }
+        onetime = false;
         Future.delayed(const Duration(milliseconds: 500), () {
           loadColor();
         });

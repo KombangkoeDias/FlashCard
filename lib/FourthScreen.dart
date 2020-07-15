@@ -12,8 +12,11 @@ class FourthScreen extends StatefulWidget {
 
 class _FourthScreenState extends State<FourthScreen> {
   List<String> Settings = ["Color"];
+  List<String> Setted = [''];
   bool loading = false;
   bool value = true;
+  MaterialColor ThemeColor = Colors.lightBlue;
+  Color TextColor = Colors.black;
 
   Future<void> OpenCupertino(){
     return showDialog<void>(
@@ -32,25 +35,26 @@ class _FourthScreenState extends State<FourthScreen> {
                     child: Text(
                         "Blue (default)"
                     ),
-                    onPressed: () {writeColor('blue'); Navigator.of(context).pop();},
+                    onPressed: () {writeColor('blue'); Navigator.of(context).pop();loadColor();
+                    },
                   ),
                   RaisedButton(
                     child: Text(
                       "Green"
                     ),
-                    onPressed: () {writeColor('green'); Navigator.of(context).pop();},
+                    onPressed: () {writeColor('green'); Navigator.of(context).pop(); loadColor();},
                   ),
                   RaisedButton(
                     child: Text(
                         "Red"
                     ),
-                    onPressed: () {writeColor('red'); Navigator.of(context).pop(); },
+                    onPressed: () {writeColor('red'); Navigator.of(context).pop();loadColor(); },
                   ),
                   RaisedButton(
                     child: Text(
                         "Yellow"
                     ),
-                    onPressed: () {writeColor('yellow'); Navigator.of(context).pop();},
+                    onPressed: () {writeColor('yellow'); Navigator.of(context).pop();loadColor();},
                   )
                 ],
               )
@@ -73,9 +77,8 @@ class _FourthScreenState extends State<FourthScreen> {
     setState(() {
       loading = true;
     });
-    /*
-    load preferences
-     */
+
+
     await Future.delayed(const Duration(milliseconds: 500),() {
       setState(() {
         loading = false;
@@ -83,20 +86,49 @@ class _FourthScreenState extends State<FourthScreen> {
     });
   }
 
+  void loadColor(){
+    readColor().then((color) {
+      setState(() {
+        ThemeColor = color['ThemeColor'];
+        TextColor = color['TextColor'];
+      });
+      setState(() {
+        Setted[0] = currentColor();
+      });
+    });
+  }
+
+  String currentColor(){
+    if (ThemeColor == Colors.lightBlue){
+      return 'blue';
+    }
+    else if (ThemeColor == Colors.lightGreen){
+      return 'green';
+    }
+    else if (ThemeColor == Colors.yellow){
+      return 'yellow';
+    }
+    else if (ThemeColor == Colors.red){
+      return 'red';
+    }
+    else{
+      return 'blue';
+    }
+  }
+
   List<Widget> drawSettingList(){
     List<Widget> list = new List<Widget>();
     for (int i = 0;i < Settings.length; ++i){
-      print(Settings[i]);
       list.add(new GestureDetector(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(5,2,5,2),
           child: Ink(
-            color: Colors.lightBlue[100],
+            color: ThemeColor[100],
             child: ListTile(
               leading: Icon(Icons.settings),
               title: Text(
-                  Settings[i],
-                  style: TextStyle(color: Colors.indigo)
+                  Settings[i] + " : " + Setted[i],
+                  style: TextStyle(color: TextColor)
               ),
             ),
           ),
@@ -111,15 +143,24 @@ class _FourthScreenState extends State<FourthScreen> {
   @override
   Widget build(BuildContext context) {
     if (value){
+      loadColor();
       loadPreference();
       setState(() {
         value = false;
       });
+      setState(() {
+        Setted[0] = currentColor();
+      });
     }
+
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: ThemeColor,
           title: Text(
             'Setting',
+            style: TextStyle(
+              color: TextColor
+            ),
           ),
         ),
         body:  LayoutBuilder(
@@ -129,7 +170,7 @@ class _FourthScreenState extends State<FourthScreen> {
                   if (loading){
                     return Center(
                         child: SpinKitRotatingCircle(
-                          color: Colors.blue,
+                          color: ThemeColor,
                           size: 50.0,
                         )
                     );

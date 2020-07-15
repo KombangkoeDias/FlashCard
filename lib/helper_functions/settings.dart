@@ -26,23 +26,19 @@ Future<Map<String,dynamic>> readColor() async {
 
     switch(contents){
       case 'blue':{
-        print('blue theme');
-        return {"ThemeColor":Colors.lightBlue,"TextColor": Colors.black87, "ActionColor": Colors.red};
+        return {"ThemeColor":Colors.lightBlue,"TextColor": Colors.indigo, "ActionColor": Colors.red};
       }
       break;
       case 'green':{
-        print("green theme");
-        return {"ThemeColor":Colors.lightGreen, "TextColor": Colors.black, "ActionColor": Colors.pink};
+        return {"ThemeColor":Colors.lightGreen, "TextColor": Colors.indigo, "ActionColor": Colors.pink};
       }
       break;
       case 'red':{
-        print("red theme");
-        return {"ThemeColor":Colors.red, "TextColor": Colors.black87, "ActionColor": Colors.cyan};
+        return {"ThemeColor":Colors.red, "TextColor": Colors.indigo, "ActionColor": Colors.deepOrange};
       }
       break;
       case 'yellow':{
-        print("yellow theme");
-        return {"ThemeColor":Colors.yellow, "TextColor": Colors.black, "ActionColor": Colors.red};
+        return {"ThemeColor":Colors.yellow, "TextColor": Colors.indigo, "ActionColor": Colors.red};
       }
       break;
     }
