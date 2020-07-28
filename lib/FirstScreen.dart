@@ -210,7 +210,8 @@ class _FirstScreenState extends State<FirstScreen> {
     print(response.statusCode);
     if (response.statusCode == 200){
       List<String> newresponse = [];
-      if (response.body.length != 0) {
+      print(response.body.length);
+      if (response.body.length > 2) {
         newresponse = response.body.substring(
             1, response.body.length - 1).split(",");
       }

@@ -18,8 +18,13 @@ Future<File> writeUser(String user) async{
 }
 
 Future<File> deleteUser() async{
-  final file = await _localFile;
-  return file.delete();
+  try{
+    final file = await _localFile;
+    file.delete();
+  }
+  catch(err) {
+    return null;
+  }
 }
 
 Future<String> readUser() async {

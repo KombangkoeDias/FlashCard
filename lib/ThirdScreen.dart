@@ -42,7 +42,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
     print(response.statusCode);
     if (response.statusCode == 200){
       List<String> newresponse = [];
-      if (response.body.length != 0) {
+      if (response.body.length > 2) {
         newresponse = response.body.substring(
             1, response.body.length - 1).split(",");
       }
