@@ -28,7 +28,6 @@ class _SecondScreenState extends State<SecondScreen> {
         body: {
           "setName": nameController.text,
           "username": username,
-
         }
     );
     print(response.statusCode);
